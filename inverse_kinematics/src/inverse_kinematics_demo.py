@@ -19,7 +19,7 @@ import pygame
 import numpy as np
 
 # ---------------------------------------------------------------------------
-# ROS = True
+# ROS = True sfdsfds
 
 # if ROS:
 import rospy
