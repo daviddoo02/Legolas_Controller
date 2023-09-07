@@ -19,13 +19,11 @@ import pygame
 import numpy as np
 
 # ---------------------------------------------------------------------------
-# ROS = True sfdsfds
 
-# if ROS:
 import rospy
 from sensor_msgs.msg import Joy
 from inverse_kinematics.msg import joint_angles
-# from std_msgs import float
+
 
 # ---------------------------------------------------------------------------
 
@@ -33,20 +31,19 @@ d2r = np.deg2rad
 r2d = np.rad2deg
 
 
-# BackGround = Background('/src/kinematics/src/Legolas_C_Space.png', [0,0])
-
 
 class Simulation:
     def __init__(self):
         
-
-        self.BackGround = Background('Legolas_C_Space.png', [0,0])
+        self.display_sim = False        # Enabling this will render the leg in pygame. While this work on faster computer, it slows down considerably on the Pi.
 
         #init pygame
-        pygame.init()
-        self.screen = pygame.display.set_mode((800, 800))
-        pygame.display.set_caption("Leg Simulator")
-        self.clock = pygame.time.Clock()
+        if self.display_sim:
+            self.BackGround = Background('Legolas_C_Space.png', [0,0])
+            pygame.init()
+            self.screen = pygame.display.set_mode((800, 800))
+            pygame.display.set_caption("Leg Simulator")
+            self.clock = pygame.time.Clock()
         
         self.reset()
 
@@ -56,7 +53,7 @@ class Simulation:
         self.JoySub = rospy.Subscriber(sub_topic, Joy , self.run_simulation)
 
         self.angle_pub = rospy.Publisher(pub_topic, joint_angles, queue_size=1)
-        # self.r = rospy.Rate(10)
+        
         self.angle_msg = joint_angles()
 
         while not rospy.is_shutdown():
@@ -75,12 +72,15 @@ class Simulation:
         return msg.buttons
     
     def run_simulation(self, msg):
-        self.clock.tick(100)
-        self.screen.fill([255, 255, 255])
-        self.screen.blit(self.BackGround.image, self.BackGround.rect)
-        
-        render_leg(self.leg_list, self.leg[0], self.mouse, self.screen)
-        pygame.display.update()
+        if self.display_sim:
+
+            self.clock.tick(100)
+            self.screen.fill([255, 255, 255])
+            self.screen.blit(self.BackGround.image, self.BackGround.rect)
+            
+            render_leg(self.leg_list, self.leg[0], self.mouse, self.screen)
+            pygame.display.update()
+
         self.joystick_input(msg)
 
     def Clamp(num,min,max):
@@ -106,7 +106,7 @@ class Simulation:
         # foot_coords = self.leg[0].segments[2].abs_end_coords()
         # print("Foot:", foot_coords)
 
-        speed = 10
+        speed = 20
 
         self.mouse = (self.mouse[0] - speed*np.float16(axes[3]), self.mouse[1] + speed*np.float16(axes[4]))
         hip,knee,calf = self.leg_list.inv_kine_TRUE(self.leg[0], heel_y_coords, self.mouse, True)
