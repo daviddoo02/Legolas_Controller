@@ -28,6 +28,9 @@ class Biped:
         self.thigh_servo = servo.Servo(self.pca.channels[2], min_pulse=500, max_pulse=2600, actuation_range=270)
         self.foreleg_servo = servo.Servo(self.pca.channels[3], min_pulse=500, max_pulse=2600, actuation_range=270)
         self.calf_servo = servo.Servo(self.pca.channels[4], min_pulse=500, max_pulse=2600, actuation_range=270)
+        
+        self.hip1_servo.angle = 185
+        self.hip2_servo.angle = 90
 
         self.thigh_prev = 65
         self.foreleg_prev = 35

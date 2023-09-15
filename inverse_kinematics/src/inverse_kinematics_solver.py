@@ -106,14 +106,14 @@ class Simulation:
         # foot_coords = self.leg[0].segments[2].abs_end_coords()
         # print("Foot:", foot_coords)
 
-        speed = 20
+        speed = 10
 
         self.mouse = (self.mouse[0] - speed*np.float16(axes[3]), self.mouse[1] + speed*np.float16(axes[4]))
         hip,knee,calf = self.leg_list.inv_kine_TRUE(self.leg[0], heel_y_coords, self.mouse, True)
 
         self.angle_msg.hip_pitch = r2d(hip) + 180                  # Virtual: 150 - 90 where 150 is forward;  Real: 90 - 30 where 30 is forward
         self.angle_msg.knee = -r2d(knee) + 155                  # Virtual: 120 - 55 where 120 is full-contract;  Real: 100 - 35 where 35 is full-contract
-        self.angle_msg.calf = -r2d(calf) + 180                  # Virtual: (0) 30 - 135 where 30 is toe up; Real: (60) 140 - 45 where 140 is toe up
+        self.angle_msg.calf = -r2d(calf) + 180 + 10                 # Virtual: (0) 30 - 135 where 30 is toe up; Real: (60) 140 - 45 where 140 is toe up
 
         rospy.loginfo(self.angle_msg)
         self.angle_pub.publish(self.angle_msg)
