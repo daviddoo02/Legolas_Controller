@@ -26,11 +26,8 @@ pca.frequency = 50
 
 servo = servo.Servo(pca.channels[0], min_pulse=500, max_pulse=2600, actuation_range=270)
 
-servo.angle = 0
+# servo.angle = 0
 
-time.sleep(5)
-
-print("Initial Channel value:", chan.value)
 
 def map_range(x, in_min, in_max, out_min, out_max):
     """re-maps a number from one range to another."""
@@ -39,20 +36,24 @@ def map_range(x, in_min, in_max, out_min, out_max):
         return max(min(mapped, out_max), out_min)
     return min(max(mapped, out_max), out_min)
 
-prev_read = map_range(chan.value, 2048, 24150, 0, 270)
-readings = []
+def pot_2_deg(Vout, Vmax = 7, servo_range = 270):
+    angle = 687* Vout/Vmax - 25.64
+    return angle
 
+readings = []
 
 try:
     while True:
         desiredPos=float(input("Degrees (0-270): "))
         servo.angle = desiredPos
 
-        curr_read = map_range(chan.value, 2048, 24150, 0, 270)
+        # curr_read = map_range(chan.value, 2048, 24150, 0, 270)
 
-        while abs(desiredPos - curr_read) > 0.5:
-            readings.append(chan.voltage)
-            curr_read = map_range(chan.value, 2048, 24150, 0, 270)
+        curr_read = pot_2_deg(chan.voltage)
+
+        while abs(desiredPos - curr_read) > 1:
+            readings.append(curr_read)
+            curr_read = pot_2_deg(chan.voltage)
             print(curr_read)
 
         
