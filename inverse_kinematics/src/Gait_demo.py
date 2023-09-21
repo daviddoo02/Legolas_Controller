@@ -17,7 +17,7 @@ with open("Gait1.csv") as csvfile:
         input_gait.append(row)
 
 
-BackGround = Background('Legolas C-Space.png', [0,0])
+BackGround = Background('Legolas_C_Space.png', [0,0])
 
 leg_list = LegList()
 leg = Leg()
@@ -38,7 +38,7 @@ while running:
     for coords in input_gait:
         trace_gait = False          # This will draw out every step the leg takes if True
         if not trace_gait:
-            print("Here")
+            # print("Here")
             clock.tick(100)
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:

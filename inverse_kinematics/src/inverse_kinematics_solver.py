@@ -20,9 +20,12 @@ import numpy as np
 
 # ---------------------------------------------------------------------------
 
-import rospy
-from sensor_msgs.msg import Joy
-from inverse_kinematics.msg import joint_angles
+ros = False
+
+if ros:
+    import rospy
+    from sensor_msgs.msg import Joy
+    from inverse_kinematics.msg import joint_angles
 
 
 # ---------------------------------------------------------------------------
@@ -120,32 +123,33 @@ class Simulation:
 
 
 
-
-if __name__ == '__main__':
-    rospy.init_node('joint_angles')
-    Sim = Simulation()
+if ros:
+    if __name__ == '__main__':
+        rospy.init_node('joint_angles')
+        Sim = Simulation()
 
     
 
-    # else:
-    #     #init pygame
-    #     leg_list = LegList()
-    #     pygame.init()
-    #     screen = pygame.display.set_mode((800, 800))
-    #     pygame.display.set_caption("Leg Simulator")
-    #     clock = pygame.time.Clock()
-    #     running = True
+else:
+    #init pygame
+    leg_list = LegList()
+    pygame.init()
+    screen = pygame.display.set_mode((800, 800))
+    pygame.display.set_caption("Leg Simulator")
+    BackGround = Background('Legolas_C_Space.png', [0,0])
+    clock = pygame.time.Clock()
+    running = True
 
-    #     while running:
-    #         clock.tick(50)
-    #         for event in pygame.event.get():
-    #             if event.type == pygame.QUIT:
-    #                 running = False
-            
-    #         screen.fill([255, 255, 255])
-    #         # screen.fill((0, 0, 0))
-    #         screen.blit(BackGround.image, BackGround.rect)
+    while running:
+        clock.tick(50)
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                running = False
+        
+        screen.fill([255, 255, 255])
+        # screen.fill((0, 0, 0))
+        screen.blit(BackGround.image, BackGround.rect)
 
-    #         render_leg(leg_list, leg_list.legs[0], leg_list.mouse, screen)
-    #         pygame.display.update()
-    #         leg_list.inputs(0, pygame)
+        render_leg(leg_list, leg_list.legs[0], leg_list.mouse, screen)
+        pygame.display.update()
+        leg_list.inputs(0, pygame)
