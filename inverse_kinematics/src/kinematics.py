@@ -8,12 +8,13 @@ from math import atan2
 import pygame
 from pygame.math import clamp
 import math
+import typing
 
 d2r = np.deg2rad
 r2d = np.rad2deg
 
 class Motor:
-    def __init__(self, motor_nub_length, angle, motor_nub_offset, end_nub_radius, end_nub_angle_offset, connecting_rod_length, connecting_rod_end, bend):
+    def __init__(self, motor_nub_length :float, angle:float, motor_nub_offset, end_nub_radius:float, end_nub_angle_offset:float, connecting_rod_length:float, connecting_rod_end, bend:bool):
         self.motor_nub_length = motor_nub_length
         self.angle = angle
         self.motor_nub_offset = motor_nub_offset
@@ -40,7 +41,6 @@ class Motorless:
 class Joint:
     def __init__(self):
         self.yeet = False
-
 
 class LegSegment:
     def __init__(self, motor_type): # all segments contain these values, motor_type contains the unique information
@@ -166,7 +166,6 @@ def rotate_coords_f(trig_mult, coords):
         trig_mult[1] * coords[1] - trig_mult[0] * coords[0]
     )
 
-#rewrite rect_to_polar in python
 def rect_to_polar(origin, rect):
     x_side = rect[0] - origin[0]
     y_side = rect[1] - origin[1]
@@ -174,39 +173,58 @@ def rect_to_polar(origin, rect):
     radius = math.sqrt((rect[0] - origin[0])**2 + (rect[1] - origin[1])**2)
     return (angle, radius)
 
-
 class Leg:
     def __init__(self):
+        origin_coords1 = (37.5, -16.0)
+        end_nub_radius1 = 45.71
+        connecting_rod_length1 = 179.0
+        connecting_rod_end1 = (100.0, 100.0)
+        end_nub_angle_offset1 = d2r(-17.39)
+        bend1 = False
+
+        motor_nub_length2 = 32.0
+        angle2 = 1.5
+        motor_nub_offset2 = (30.83, 19.25) # 30.83, 19.25
+        end_nub_radius2 = 49.4
+        end_nub_angle_offset2 = d2r(53.75) #53.75 26.9    previous: #0.909 # 52.081864 deg
+        connecting_rod_length2 = 115.0
+        connecting_rod_end2 = (100.0, 100.0)
+        bend2 = False
+
         self.segments = [
-            LegSegment(Joint()),
-            LegSegment(JointAndConnector((37.5, -16.0), 45.71, 179.0, (100.0, 100.0), -0.312, False)),
-            LegSegment(Motor(32.0, 1.5, (72.3, 18.1), 49.4, 0.909, 125.0, (100.0, 100.0), False)),
-            LegSegment(Motorless())
+            LegSegment(Joint()), # thigh
+            LegSegment(JointAndConnector(origin_coords1, end_nub_radius1, connecting_rod_length1, connecting_rod_end1, end_nub_angle_offset1, bend1)), # foreleg
+            LegSegment(Motor(motor_nub_length2, angle2, motor_nub_offset2, end_nub_radius2, end_nub_angle_offset2, connecting_rod_length2, connecting_rod_end2, bend2)), # shin
+            LegSegment(Motorless()) # foot
         ]
 
         # Initialize Starting Angles
 
+        # thigh
         # Hip Pitch, motor[0], init at 115 
         self.segments[0].rel_angle = d2r(-115)
         self.segments[0].length = 80.0
         self.segments[0].max_angle = d2r(-90)
         self.segments[0].min_angle = d2r(-150)
 
+        # foreleg
         # #Knee, motor[1], init at 120
         self.segments[1].rel_angle = d2r(120)
         self.segments[1].length = 211.5
         self.segments[1].min_angle = d2r(60)
         self.segments[1].max_angle = d2r(120)
 
-        self.segments[2].length = 210.8
+        # shin
+        self.segments[2].length = 169.2
+        self.segments[2].motor.angle = d2r(135)
+        self.segments[2].min_angle = d2r(30)
+        self.segments[2].max_angle = d2r(135)
 
+        # foot
         # Calf, motor[2], init at 120
         self.segments[3].rel_angle = 0.0
         self.segments[3].length = 52.0
 
-        self.segments[2].motor.angle = d2r(135)
-        self.segments[2].min_angle = d2r(30)
-        self.segments[2].max_angle = d2r(135)
 
         self.update()
 
