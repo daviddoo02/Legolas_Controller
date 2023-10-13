@@ -202,23 +202,23 @@ class Leg:
 
         # thigh
         # Hip Pitch, motor[0], init at 115 
-        self.segments[0].rel_angle = d2r(-115)
+        self.segments[0].rel_angle = d2r(-120)
         self.segments[0].length = 80.0
         self.segments[0].max_angle = d2r(-90)
         self.segments[0].min_angle = d2r(-150)
 
         # foreleg
         # #Knee, motor[1], init at 120
-        self.segments[1].rel_angle = d2r(120)
+        self.segments[1].rel_angle = d2r(115)
         self.segments[1].length = 211.5
         self.segments[1].min_angle = d2r(60)
         self.segments[1].max_angle = d2r(120)
 
         # shin
         self.segments[2].length = 169.2
-        self.segments[2].motor.angle = d2r(135)
+        self.segments[2].motor.angle = d2r(115)
         self.segments[2].min_angle = d2r(30)
-        self.segments[2].max_angle = d2r(135)
+        self.segments[2].max_angle = d2r(115)
 
         # foot
         # Calf, motor[2], init at 120
@@ -246,14 +246,14 @@ class Leg:
         if isinstance(segment.motor, Motor):
             if additive:
                 segment.motor.angle += angle
-                # print("motor:", r2d(segment.motor.angle))
+                # print(f"{segment.motor}:", r2d(segment.motor.angle))
             else:
                 segment.motor.angle = angle
             segment.motor.angle = clamp(segment.motor.angle, segment.min_angle, segment.max_angle)
         else: # segment is either a joint or motorless
             if additive:
                 segment.rel_angle += angle
-                # print("motor:", r2d(segment.rel_angle))
+                # print(f"{segment}:", r2d(segment.rel_angle))
             else:
                 segment.rel_angle = angle
             segment.rel_angle = clamp(segment.rel_angle, segment.min_angle, segment.max_angle)
