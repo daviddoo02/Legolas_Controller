@@ -116,19 +116,29 @@ More information regarding the physical design of the Legolas Biped can be found
 
 ### Installation
 
-Clone the repo
+Clone the repo into your working directory
    ```sh
    git clone https://github.com/daviddoo02/Legolas_Controller.git
    ```
 
-<p align="right">(<a href="#readme-top">back to top</a>)</p>
 
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 
 <!-- USAGE EXAMPLES -->
 ## Usage
 
-Use this space to show useful examples of how a project can be used. Additional screenshots, code examples and demos work well in this space. You may also link to more resources.
+
+
+### 1. Forward Kinematics
+   ```sh
+   git clone https://github.com/daviddoo02/Legolas_Controller.git
+   ```
+
+### 2. Inverse Kinematics
+   ```sh
+   git clone https://github.com/daviddoo02/Legolas_Controller.git
+   ```
 
 _For more examples, please refer to the [Documentation](https://example.com)_
 
@@ -139,10 +149,12 @@ _For more examples, please refer to the [Documentation](https://example.com)_
 <!-- ROADMAP -->
 ## Roadmap
 
-- [ ] Feature 1
-- [ ] Feature 2
-- [ ] Feature 3
-    - [ ] Nested Feature
+### Finished Features
+- Forward Kinematics - Control foot position using joint angles
+- Inverse Kinematics - Control foot position using coordinates
+
+### Ongoing Features
+- Realtime Servo Position Feedback - Reading and publishing current joint angles via servos' encoders.
 
 See the [open issues](https://github.com/daviddoo02/Legolas_Controller/issues) for a full list of proposed features (and known issues).
 
