@@ -42,7 +42,7 @@
     <a href="https://github.com/daviddoo02/Legolas_Controller"><strong>Explore the docs »</strong></a>
     <br />
     <br />
-    <a href="https://github.com/daviddoo02/Legolas_Controller">View Demo</a>
+    <a href="https://github.com/daviddoo02/Legolas_Controller/assets/37449565/f6609b73-5298-48c0-9af3-66c938ab5ff4">View Demo</a>
     ·
     <a href="https://github.com/daviddoo02/Legolas_Controller/issues">Report Bug</a>
     ·
