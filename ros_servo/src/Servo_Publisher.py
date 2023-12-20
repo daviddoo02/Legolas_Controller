@@ -4,7 +4,6 @@ import rospy
 from ros_servo.msg import servo_reading
 
 import matplotlib.pyplot as plt
-from scipy.signal import butter, filtfilt
 import numpy as np
 
 import typing
@@ -82,36 +81,15 @@ class Servo:
             ema.append(alpha * data[i] + (1 - alpha) * ema[-1])
         return ema
     
-    def butter_lowpass_filter(self, data, cutoff_freq, sampling_rate, order=4):
-        nyquist = 0.5 * sampling_rate
-        normal_cutoff = cutoff_freq / nyquist
-        b, a = butter(order, normal_cutoff, btype='low', analog=False)
-
-        # Add padding to the input data
-        padlen = 15
-        padded_data = [data[0]] * padlen + data
-
-        # Apply the filter
-        filtered_data = filtfilt(b, a, padded_data)
-
-        # Remove the padded values
-        filtered_data = filtered_data[padlen:]
-
-        return filtered_data
-
     def filter_test(self, pub):
-        test = [0, 90, 180, 270, 180, 90, 0]
+        test = [0, 30, 60, 90, 180, 270, 0, 90, 180, 270, 0]
+
+        ground_truth = []
 
         raw_angle_list = []
 
-        moving_average_list = []
-        window_size = 2
-
         exp_average_list = []
         alpha = 0.75
-
-        low_pass_list = []
-        cutoff_freq = 0.1
 
 
         print("{:>5}\t{:>5}\t{:>5}".format('raw', 'v', 'deg'))
@@ -121,20 +99,12 @@ class Servo:
             self.servo.angle = desiredPos
             n = 0
 
-            while n < 20:
+            while n < 10:
                 value = self.chan0.value
                 voltage = self.chan0.voltage
                 angle = self.enc_2_deg(self.chan0.voltage)
 
                 raw_angle_list.append(angle)
-
-                # Apply moving average filter
-                if len(raw_angle_list) >= window_size:
-                    moving_avg_angle = sum(raw_angle_list[-window_size:]) / window_size
-                else:
-                    moving_avg_angle = angle  # If there are not enough readings, use the raw angle
-
-                moving_average_list.append(moving_avg_angle)
 
                 # Apply Exponential Moving Average filter
                 if len(exp_average_list) == 0:
@@ -144,13 +114,7 @@ class Servo:
 
                 exp_average_list.append(exp_filtered_angle)
 
-                # Apply low-pass Butterworth filter
-                if len(raw_angle_list) > 2:
-                    low_pass_angle = self.butter_lowpass_filter(raw_angle_list[-3:], cutoff_freq, sampling_rate=1, order=4)[-1]
-                else:
-                    low_pass_angle = angle  # If there are not enough readings, use the raw angle
-
-                low_pass_list.append(low_pass_angle)
+                ground_truth.append(theta)
 
                 print("{:>5}\t{:>5.3f}\t{:>5.3f}".format(value, voltage, angle))
 
@@ -161,10 +125,9 @@ class Servo:
 
         
         # Plot the readings
-        plt.plot(raw_angle_list, label='raw')
-        plt.plot(moving_average_list, label='moving average')
-        plt.plot(exp_average_list, label='exp moving average')
-        # plt.plot(low_pass_list, label='low pass')
+        plt.plot(ground_truth, label='ground truth', color='red')
+        plt.plot(raw_angle_list, label='raw', color='blue')
+        plt.plot(exp_average_list, label='exp moving average', linestyle='-.', color='black')
         plt.xlabel('Reading Number')
         plt.ylabel('Angle (Degrees)')
         plt.legend()
