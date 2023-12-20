@@ -28,6 +28,7 @@ class Servo:
         self.pca.frequency = 50
         self.servo = servo.Servo(self.pca.channels[0], min_pulse=500, max_pulse=2600, actuation_range=270)
         self.servo.angle = 0
+        time.sleep(1)
 
         ros = False
 
@@ -82,14 +83,16 @@ class Servo:
         return ema
     
     def filter_test(self, pub):
-        test = [0, 30, 60, 90, 180, 270, 0, 90, 180, 270, 0]
+        # test = [0, 30, 60, 90, 120, 150, 180, 210, 240, 270, 240, 210, 180, 150, 120, 90, 60, 30, 0]
+        # test = [270, 240, 210, 180, 150, 120, 90, 60, 30, 0, 30, 60, 90, 120, 150, 180, 210, 240, 270]
+        test = np.linspace(0, 270, 20)
 
         ground_truth = []
 
         raw_angle_list = []
 
         exp_average_list = []
-        alpha = 0.75
+        alpha = 0.6
 
 
         print("{:>5}\t{:>5}\t{:>5}".format('raw', 'v', 'deg'))
@@ -99,7 +102,7 @@ class Servo:
             self.servo.angle = desiredPos
             n = 0
 
-            while n < 10:
+            while n < 5:
                 value = self.chan0.value
                 voltage = self.chan0.voltage
                 angle = self.enc_2_deg(self.chan0.voltage)
