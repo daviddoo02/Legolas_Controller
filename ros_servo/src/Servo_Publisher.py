@@ -164,7 +164,7 @@ class Servo:
         plt.plot(raw_angle_list, label='raw')
         plt.plot(moving_average_list, label='moving average')
         plt.plot(exp_average_list, label='exp moving average')
-        plt.plot(low_pass_list, label='low pass')
+        # plt.plot(low_pass_list, label='low pass')
         plt.xlabel('Reading Number')
         plt.ylabel('Angle (Degrees)')
         plt.legend()
