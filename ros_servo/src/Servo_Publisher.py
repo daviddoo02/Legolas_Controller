@@ -28,7 +28,7 @@ class Servo:
         self.pca = PCA9685(i2c)
         self.pca.frequency = 50
         self.servo = servo.Servo(self.pca.channels[0], min_pulse=500, max_pulse=2600, actuation_range=270)
-        self.servo.angle = 270
+        self.servo.angle = 0
         time.sleep(1)
 
         ros = False
@@ -65,8 +65,11 @@ class Servo:
         mapped = max(min((x - in_min) * (out_max - out_min) / (in_max - in_min) + out_min, out_max), out_min)
         return mapped
 
-    def enc_2_deg(self, V_reading, Vmin = 0.262, Vmax = 3.053):
-        angle = self.map_range(V_reading, Vmin, Vmax, 0, 270)
+    def enc_2_deg(self, val_reading, V_reading, valmin = 2090, valmax = 25565, Vmin = 0.261, Vmax = 3.573):
+        a = 0.75
+        angle1 = self.map_range(V_reading, Vmin, Vmax, 0, 270)
+        angle2 = self.map_range(val_reading, valmin, valmax, 0, 270)
+        angle = angle1*a + angle2*(1-a)
         return angle
 
     def ros_publish_readings(self, value, voltage, angle):
@@ -83,51 +86,19 @@ class Servo:
             ema.append(alpha * data[i] + (1 - alpha) * ema[-1])
         return ema
     
-    def kalman_filter(self, measurement: float, initial_state: float, process_variance: float, measurement_variance: float ) -> float:
-        kf = KalmanFilter(dim_x=1, dim_z=1)
-
-        # State transition matrix
-        kf.F = np.array([[1]])
-
-        # Measurement function
-        kf.H = np.array([1])
-
-        # Initial state
-        kf.x = np.array([initial_state])
-
-        # Initial state covariance
-        kf.P *= 1e2
-
-        # Process noise covariance
-        kf.Q *= process_variance
-
-        # Measurement noise covariance
-        kf.R *= measurement_variance
-
-        # Prediction step
-        kf.predict()
-
-        # Update step
-        kf.update(np.array([measurement]))  # Ensure measurement is a 1D array
-
-        # Get filtered state mean
-        filtered_state_mean = kf.x[0]
-
-        return filtered_state_mean
-    
     def filter_test(self, pub):
-        # test = [0, 30, 60, 90, 120, 150, 180, 210, 240, 270, 240, 210, 180, 150, 120, 90, 60, 30, 0]
-        test = [270, 240, 210, 180, 150, 120, 90, 60, 30, 0, 30, 60, 90, 120, 150, 180, 210, 240, 270]
+        test = [0, 30, 60, 90, 120, 150, 180, 210, 240, 270, 240, 210, 180, 150, 120, 90, 60, 30, 0]
+        # test = [270, 240, 210, 180, 150, 120, 90, 60, 30, 0, 30, 60, 90, 120, 150, 180, 210, 240, 270]
         # test = np.linspace(0, 270, 3)
 
         prediction = []
 
+        error_list = []
+
         raw_angle_list = []
 
-        exp_average_list = []
-        alpha = 0.6
-
-        kalman_filtered_list = []
+        # exp_average_list = []
+        # alpha = 0.6
 
 
         print("{:>5}\t{:>5}\t{:>5}".format('raw', 'v', 'deg'))
@@ -135,32 +106,24 @@ class Servo:
         for theta in test:
             desiredPos = theta
             self.servo.angle = desiredPos
-            prev_angle = self.enc_2_deg(self.chan0.voltage)
             n = 0
 
-            while n < 5:
+            while n < (5 + 1):
                 value = self.chan0.value
                 voltage = self.chan0.voltage
-                angle = self.enc_2_deg(self.chan0.voltage)
+                angle = self.enc_2_deg(self.chan0.value, self.chan0.voltage)
 
                 raw_angle_list.append(angle)
 
                 # Apply Exponential Moving Average filter
-                if len(exp_average_list) == 0:
+                """if len(exp_average_list) == 0:
                     exp_filtered_angle = angle
                 else:
                     exp_filtered_angle = alpha * angle + (1 - alpha) * exp_average_list[-1]
 
                 exp_average_list.append(exp_filtered_angle)
-
-                # Apply Kalman filter
-                if len(kalman_filtered_list) == 0:
-                    kalman_angle = angle
-                else:
-                    kalman_angle = self.kalman_filter(angle, initial_state=theta, process_variance=1, measurement_variance=1)
-
-                kalman_filtered_list.append(kalman_angle)
-
+                """
+                
                 prediction.append(theta)
 
                 print("{:>5}\t{:>5.3f}\t{:>5.3f}".format(value, voltage, angle))
@@ -169,14 +132,15 @@ class Servo:
                     self.ros_publish_readings(value, voltage, angle)
 
                 n += 1
-                prev_angle = angle
+            
+            error = theta - angle
 
+            error_list.append(error)
         
         # Plot the readings
-        plt.plot(prediction, label='prediction', color='red')
+        """plt.plot(prediction, label='prediction', color='red')
         plt.plot(raw_angle_list, label='raw', color='blue')
-        plt.plot(exp_average_list, label='exp moving average', linestyle='-.', color='black')
-        plt.plot(kalman_filtered_list, label='kalman', linestyle='-.', color='purple')
+        # plt.plot(exp_average_list, label='exp moving average', linestyle='-.', color='black')
         plt.xlabel('Reading Number')
         plt.ylabel('Angle (Degrees)')
         plt.legend()
@@ -184,7 +148,15 @@ class Servo:
         plt.yticks(range(0, 270 + 1, 30))
         plt.grid(True)
 
-        plt.savefig('Filtered_Data.png')
+        plt.savefig('Filtered_Data.png')"""
+
+        plt.plot(error_list, label='error', color='red')
+        plt.xlabel('Reading Number')
+        plt.ylabel('Error (Degrees)')
+        plt.legend()
+        plt.grid(True)
+
+        plt.savefig('Error.png')
 
 if __name__ == '__main__':
     try:
