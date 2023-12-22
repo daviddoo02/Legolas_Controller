@@ -2,12 +2,10 @@
   
 import rospy
 from ros_servo.msg import servo_reading
-from filterpy.kalman import KalmanFilter
 
 import matplotlib.pyplot as plt
 import numpy as np
 
-from typing import Tuple
 import time
 
 from board import SCL, SDA
@@ -29,7 +27,7 @@ class Servo:
         self.pca.frequency = 50
         self.servo = servo.Servo(self.pca.channels[0], min_pulse=500, max_pulse=2600, actuation_range=270)
 
-        ros = False
+        ros = True
 
         if ros:
             pub_topic = 'servo_reading'
@@ -98,8 +96,8 @@ class Servo:
 
         raw_angle_list = []
 
-        exp_average_list = []
-        alpha = 0.8
+        # exp_average_list = []
+        # alpha = 0.8
 
 
         print("{:>5}\t{:>5}\t{:>5}".format('raw', 'v', 'deg'))
@@ -109,23 +107,23 @@ class Servo:
             self.servo.angle = desiredPos
             n = 0
 
-            while n < (5 + 1):
+            while n < (3 + 1):
                 value = self.chan0.value
                 voltage = self.chan0.voltage
                 angle = self.enc_2_deg(self.chan0.value, self.chan0.voltage)
 
                 # Adjusting for Error
-                angle = angle + 0.12*angle + 0.7
+                angle = angle + 0.13*angle + 0.7
 
                 raw_angle_list.append(angle)
 
                 # Apply Exponential Moving Average filter
-                if len(exp_average_list) == 0:
+                """if len(exp_average_list) == 0:
                     exp_filtered_angle = angle
                 else:
                     exp_filtered_angle = alpha * angle + (1 - alpha) * exp_average_list[-1]
 
-                exp_average_list.append(exp_filtered_angle)
+                exp_average_list.append(exp_filtered_angle)"""
                 
                 
                 prediction.append(theta)
@@ -141,50 +139,51 @@ class Servo:
 
             error_list.append(error)
         
-        # Plot the readings
-        plt.plot(prediction, label='prediction', color='red')
-        plt.plot(raw_angle_list, label='raw', color='blue')
-        plt.plot(exp_average_list, label='exp moving average', linestyle='-.', color='black')
-        plt.xlabel('Reading Number')
-        plt.ylabel('Angle (Degrees)')
-        plt.legend()
+        if not pub:
+            # Plot the readings
+            plt.plot(prediction, label='prediction', color='red')
+            plt.plot(raw_angle_list, label='raw', color='blue')
+            # plt.plot(exp_average_list, label='exp moving average', linestyle='-.', color='black')
+            plt.xlabel('Reading Number')
+            plt.ylabel('Angle (Degrees)')
+            plt.legend()
 
-        plt.yticks(range(0, 270 + 1, 30))
-        plt.grid(True)
+            plt.yticks(range(0, 270 + 1, 30))
+            plt.grid(True)
 
-        plt.savefig('Filtered_Data.png')
-        plt.close()
+            plt.savefig('Filtered_Data.png')
+            plt.close()
 
-        '''
-        plt.plot(error_list, label='error', color='red')
-        plt.xlabel('Reading Number')
-        plt.ylabel('Error (Degrees)')
-        plt.legend()
-        plt.grid(True)
+            '''
+            plt.plot(error_list, label='error', color='red')
+            plt.xlabel('Reading Number')
+            plt.ylabel('Error (Degrees)')
+            plt.legend()
+            plt.grid(True)
 
-        plt.savefig('Error.png')
-        plt.close()
+            plt.savefig('Error.png')
+            plt.close()
 
-        
-        # Fit a linear polynomial (degree=1)
-        coefficients = np.polyfit(test, error_list, 1)
+            
+            # Fit a linear polynomial (degree=1)
+            coefficients = np.polyfit(test, error_list, 1)
 
-        # Create the best-fit line using the obtained coefficients
-        best_fit_line = np.poly1d(coefficients)
+            # Create the best-fit line using the obtained coefficients
+            best_fit_line = np.poly1d(coefficients)
 
-        # Generate errors for the best-fit line
-        errors_fit = best_fit_line(test)
+            # Generate errors for the best-fit line
+            errors_fit = best_fit_line(test)
 
-        # Plot the data points and the best-fit line
-        plt.scatter(test, error_list, label='error')
-        plt.plot(test, errors_fit, label=f'Best Fit Line: error = {coefficients[0]:.2f} * angle + {coefficients[1]:.2f}', color='red')
-        plt.xlabel('Angle (degrees)')
-        plt.ylabel('Error (degrees)')
-        plt.legend()
+            # Plot the data points and the best-fit line
+            plt.scatter(test, error_list, label='error')
+            plt.plot(test, errors_fit, label=f'Best Fit Line: error = {coefficients[0]:.2f} * angle + {coefficients[1]:.2f}', color='red')
+            plt.xlabel('Angle (degrees)')
+            plt.ylabel('Error (degrees)')
+            plt.legend()
 
-        plt.savefig('Error_Regression.png')
-        plt.close()
-        '''
+            plt.savefig('Error_Regression.png')
+            plt.close()
+            '''
         
 
 if __name__ == '__main__':
