@@ -86,6 +86,7 @@ class Servo:
         test = [0, 30, 60, 90, 120, 150, 180, 210, 240, 270, 240, 210, 180, 150, 120, 90, 60, 30, 0]
         # test = [270, 240, 210, 180, 150, 120, 90, 60, 30, 0, 30, 60, 90, 120, 150, 180, 210, 240, 270] 
         # test = [0, 30, 60, 90, 120, 150, 180, 210, 240, 270]
+        # test = [0]
 
         self.servo.angle = test[0]
         time.sleep(2)
@@ -100,20 +101,20 @@ class Servo:
         # alpha = 0.8
 
 
-        print("{:>5}\t{:>5}\t{:>5}".format('raw', 'v', 'deg'))
+        # print("{:>5}\t{:>5}\t{:>5}".format('raw', 'v', 'deg'))
 
         for theta in test:
             desiredPos = theta
             self.servo.angle = desiredPos
             n = 0
 
-            while n < (3 + 1):
+            while n < (5 + 1):
                 value = self.chan0.value
                 voltage = self.chan0.voltage
                 angle = self.enc_2_deg(self.chan0.value, self.chan0.voltage)
 
                 # Adjusting for Error
-                angle = angle + 0.13*angle + 0.7
+                angle = angle + 0.13*angle
 
                 raw_angle_list.append(angle)
 
@@ -128,7 +129,7 @@ class Servo:
                 
                 prediction.append(theta)
 
-                print("{:>5}\t{:>5.3f}\t{:>5.3f}".format(value, voltage, angle))
+                # print("{:>5}\t{:>5.3f}\t{:>5.3f}".format(value, voltage, angle))
 
                 if pub:
                     self.ros_publish_readings(value, voltage, angle)
