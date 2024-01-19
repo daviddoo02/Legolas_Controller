@@ -18,8 +18,10 @@ from micropython import const
 
 
 
-class Servo:
+class Servo_Calibrate:
     def __init__(self) -> None:
+
+        # Setting up servos' pin numbers
 
         RHip1 = 5
         RHip2 = 2
@@ -33,8 +35,10 @@ class Servo:
         LForeleg = 13
         LCalf = 15
         
+        # Setting up i2c bus
         i2c = busio.I2C(SCL, SDA)
 
+        # Setting up ADCs w proper addresses
         ads1 = ADS.ADS1115(i2c, address= const(0x4a))
         ads2 = ADS.ADS1115(i2c, address= const(0x4b))
         ads3 = ADS.ADS1115(i2c, address= const(0x49))
@@ -51,6 +55,8 @@ class Servo:
         self.LForeleg_reading = AnalogIn(ads1, ADS.P3)
         self.LCalf_reading = AnalogIn(ads3, ADS.P0)
 
+        # Setting up Servo Driver and Initialize Servo
+
         self.pca = PCA9685(i2c)
         self.pca.frequency = 50
         self.RHip1_servo = servo.Servo(self.pca.channels[RHip1], min_pulse=500, max_pulse=2600, actuation_range=270)
@@ -65,35 +71,11 @@ class Servo:
         self.LForeleg_servo = servo.Servo(self.pca.channels[LForeleg], min_pulse=500, max_pulse=2600, actuation_range=270)
         self.LCalf_servo = servo.Servo(self.pca.channels[LCalf], min_pulse=500, max_pulse=2600, actuation_range=270)
 
-        self.servo_test()
+        self.reset()
 
-    def map_range(self, x: float, in_min: float, in_max: float, out_min: float, out_max: float) -> float:
-        """
-        Map a number from one range to another linearly and clamp the result.
-
-        Parameters:
-        - x (float): Input value to be mapped.
-        - in_min (float): Minimum value of the input range.
-        - in_max (float): Maximum value of the input range.
-        - out_min (float): Minimum value of the output range.
-        - out_max (float): Maximum value of the output range.
-
-        Returns:
-        - float: Mapped value within the specified output range.
-        """
-        # Calculate the mapped value, ensuring it's within the output range
-        mapped = max(min((x - in_min) * (out_max - out_min) / (in_max - in_min) + out_min, out_max), out_min)
-        return mapped
-
-    def get_voltage(self,pin):
-        return (pin.value * 3.3) / 65536
+        self.calibrate()
     
-    def enc_2_deg(self, pin, Vmin = 0, Vmax = 3.3):
-        angle = self.map_range(pin.voltage, Vmin, Vmax, 0, 270)
-        #angle = self.map_range(self.get_voltage(pin), Vmin, Vmax, 0, 270)
-        return angle
-    
-    def servo_test(self):
+    def reset(self):
         # Crouching 0 config
         
         self.RHip1_servo.angle      = 5
@@ -109,59 +91,34 @@ class Servo:
         self.LCalf_servo.angle      = 190
 
         time.sleep(5)
+        
+        return
 
-        # Standing 1 config
+    def calibrate(self):
 
-        self.RHip1_servo.angle      = 15
-        self.LHip1_servo.angle      = 175
+        print("Calibrating Right Leg ...")
 
-        self.RHip2_servo.angle      = 80
-        self.LHip2_servo.angle      = 100
+        right_servos = [self.RHip1_servo, self.RHip2_servo, self.RThigh_servo, self.RForeleg_servo, self.RCalf_servo]
+        right_servos_reading = [self.RHip1_reading, self.RHip2_reading, self.RThigh_reading, self.RForeleg_reading, self.RCalf_reading]
+        right_ROM = [[190, 170], [60, 100], [120, 0], [230, 135], [235, 130]]
 
-        self.RThigh_servo.angle     = 110
-        self.LThigh_servo.angle     = 65
+        for servo_id in range(5):
+            # Go to min position
+            right_servos[servo_id].angle = right_ROM[servo_id][0]
+            time.sleep(2)
+            print(right_servos_reading[servo_id].voltage)
 
-        self.RForeleg_servo.angle   = 190
-        self.LForeleg_servo.angle   = 155
+            # Go to max position
+            right_servos[servo_id].angle = right_ROM[servo_id][1]
+            time.sleep(2)
+            print(right_servos_reading[servo_id].voltage)
 
-        self.RCalf_servo.angle      = 90
-        self.LCalf_servo.angle      = 185
-
-        time.sleep(5)
-
-        # Crouching 0 config
-
-        self.RHip1_servo.angle      = 5
-        self.RHip2_servo.angle      = 100
-        self.RThigh_servo.angle     = 110
-        self.RForeleg_servo.angle   = 120
-        self.RCalf_servo.angle      = 85
-
-        self.LHip1_servo.angle      = 184
-        self.LHip2_servo.angle      = 80
-        self.LThigh_servo.angle     = 65
-        self.LForeleg_servo.angle   = 230
-        self.LCalf_servo.angle      = 190
-
-        time.sleep(5)
-
-        # print("Right Hip 1  :", self.enc_2_deg(self.RHip1_reading))
-        # print("Right Hip 2  :", self.enc_2_deg(self.RHip2_reading))
-        # print("Right Thigh  :", self.enc_2_deg(self.RThigh_reading))
-        # print("Right Foreleg:", self.enc_2_deg(self.RForeleg_reading))
-        # print("Right Calf   :", self.enc_2_deg(self.RCalf_reading))
-        # print()
-        # print("Left Hip 1   :", self.enc_2_deg(self.LHip1_reading))
-        # print("Left Hip 2   :", self.enc_2_deg(self.LHip2_reading))
-        # print("Left Thigh   :", self.enc_2_deg(self.LThigh_reading))
-        # print("Left Foreleg :", self.enc_2_deg(self.LForeleg_reading))
-        # print("Left Calf    :", self.enc_2_deg(self.LCalf_reading))
         return
         
         
 
 if __name__ == '__main__':
     try:
-        ros_servo = Servo()
+        ros_servo = Servo_Calibrate()
     except rospy.ROSInterruptException:
         pass
