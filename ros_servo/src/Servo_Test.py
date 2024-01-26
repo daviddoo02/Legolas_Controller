@@ -112,20 +112,17 @@ class Servo:
 
         # Standing 1 config
 
-        self.RHip1_servo.angle      = 15
-        self.LHip1_servo.angle      = 175
+        self.RHip1_servo.angle    = 15
+        self.RHip2_servo.angle    = 80
+        self.RThigh_servo.angle   = 110
+        self.RForeleg_servo.angle = 190
+        self.RCalf_servo.angle    = 90
 
-        self.RHip2_servo.angle      = 80
-        self.LHip2_servo.angle      = 100
-
-        self.RThigh_servo.angle     = 110
-        self.LThigh_servo.angle     = 65
-
-        self.RForeleg_servo.angle   = 190
-        self.LForeleg_servo.angle   = 155
-
-        self.RCalf_servo.angle      = 90
-        self.LCalf_servo.angle      = 185
+        self.LHip1_servo.angle    = 175
+        self.LHip2_servo.angle    = 100
+        self.LThigh_servo.angle   = 65
+        self.LForeleg_servo.angle = 155
+        self.LCalf_servo.angle    = 185
 
         time.sleep(5)
 
