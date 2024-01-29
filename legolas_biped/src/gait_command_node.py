@@ -8,7 +8,7 @@ th_2 = 0  # Hip 2
 th_3 = 0  # Thigh
 th_4 = 0  # Foreleg
 
-desire = np.array([-50, 104, -255])
+desire = np.array([-50, 150, -255])
 
 guess = np.array([th_1, th_2, th_3, th_4])
 

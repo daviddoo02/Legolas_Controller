@@ -1,6 +1,10 @@
 import numpy as np
 import matplotlib.pyplot as plt
 from scipy.optimize import least_squares
+from mpl_toolkits.mplot3d import Axes3D
+from mplcursors import cursor as mpl_cursor
+from scipy.signal import savgol_filter
+from matplotlib.widgets import Slider
 from typing import Tuple
 
 def DH_Transform(th, alp,r, d ):
@@ -218,6 +222,69 @@ def plot_leg_config(joint_positions):
     plt.show()
     return
 
+def plot_leg_config_sliders(joint_positions):
+    # Plotting the manipulator configuration
+    plt.close()
+
+    fig = plt.figure()
+    ax = fig.add_subplot(111, projection='3d')
+
+    # Plotting the links
+
+    # Scatter plot of joints
+    scatter = ax.scatter(joint_positions[:, 0], joint_positions[:, 1], joint_positions[:, 2], c='b', marker='o', label='Joints')
+
+    for j in range(len(joint_positions)-1):
+        ax.plot([joint_positions[j, 0], joint_positions[j + 1, 0]],
+                [joint_positions[j, 1], joint_positions[j + 1, 1]],
+                [joint_positions[j, 2], joint_positions[j + 1, 2]], color='b', linestyle='-', marker='o')
+
+    ax.plot([joint_positions[5, 0], joint_positions[7, 0]],
+            [joint_positions[5, 1], joint_positions[7, 1]],
+            [joint_positions[5, 2], joint_positions[7, 2]], color='b', linestyle='-', marker='o')
+
+    ax.plot([joint_positions[3, 0], joint_positions[6, 0]],
+            [joint_positions[3, 1], joint_positions[6, 1]],
+            [joint_positions[3, 2], joint_positions[6, 2]], color='g', linestyle='-', marker='o')
+
+    # Specific names for each point
+    point_names = ['imu - 0', 'Hip 1 - 1', 'Hip 2 - 2', 'Thigh - 3', 'Foreleg - 4', '5', '6', 'Foot - 7']
+
+    # Label each point with specific names
+    for i, txt in enumerate(joint_positions):
+        ax.text(txt[0], txt[1], txt[2], point_names[i], color='red', fontsize=8)
+
+    # Add sliders for adjusting a point's coordinates
+    slider_ax_x = plt.axes([0.9, 0.65, 0.03, 0.25], facecolor='lightgoldenrodyellow')
+    slider_ax_y = plt.axes([0.92, 0.65, 0.03, 0.25], facecolor='lightgoldenrodyellow')
+    slider_ax_z = plt.axes([0.94, 0.65, 0.03, 0.25], facecolor='lightgoldenrodyellow')
+
+    slider_x = Slider(slider_ax_x, 'X', joint_positions[0, 0], joint_positions[-1, 0], valinit=joint_positions[0, 0])
+    slider_y = Slider(slider_ax_y, 'Y', joint_positions[0, 1], joint_positions[-1, 1], valinit=joint_positions[0, 1])
+    slider_z = Slider(slider_ax_z, 'Z', joint_positions[0, 2], joint_positions[-1, 2], valinit=joint_positions[0, 2])
+
+    def update(val):
+        joint_positions[0, 0] = slider_x.val
+        joint_positions[0, 1] = slider_y.val
+        joint_positions[0, 2] = slider_z.val
+        scatter.set_offsets(joint_positions[:, :2])
+        scatter.set_3d_properties(joint_positions[:, 2])
+
+    slider_x.on_changed(update)
+    slider_y.on_changed(update)
+    slider_z.on_changed(update)
+
+    ax.set_xlabel('X')
+    ax.set_ylabel('Y')
+    ax.set_zlabel('Z')
+
+    ax.view_init(elev=10, azim=70)
+
+    ax.axis('equal')
+
+    plt.show()
+    return
+
 def clamp_angle(angle, min_angle, max_angle):
     """
     Helper function to clamp an angle within a specified range.
@@ -229,10 +296,10 @@ def error_function(desired_pos: np.ndarray, current: np.ndarray) -> float:
     th1, th2, th3, th4 = current
     current_pos = forward_kinematics(th1, th2, th3, th4)[7]
     error = np.linalg.norm(current_pos - desired_pos)
-    print(error)
+    # print(error)
     return error
 
-def inverse_kinematics(desired: np.ndarray, angles_guess: Tuple[float, float], max_iterations: int = 100, learning_rate: int = 100) -> Tuple[float, float]:
+def inverse_kinematics(desired: np.ndarray, angles_guess: Tuple[float, float], max_iterations: int = 100, learning_rate: int = 0.1) -> Tuple[float, float]:
     """
     Perform inverse kinematics using gradient descent.
 
@@ -252,7 +319,7 @@ def inverse_kinematics(desired: np.ndarray, angles_guess: Tuple[float, float], m
     step3 = 0.1
     step4 = 0.1
 
-    tolerance = 0.001 # stop when the error is less than this or when weve done max_iterations
+    tolerance = 0.01 # stop when the error is less than this or when weve done max_iterations
     iter = 0
 
     # # Define angle limits in degrees
@@ -291,7 +358,7 @@ def inverse_kinematics(desired: np.ndarray, angles_guess: Tuple[float, float], m
         iter += 1
 
         # print(angle1, angle2, angle3, angle4)
-        print(grad1, grad2, grad3, grad4)
+        # print(grad1, grad2, grad3, grad4)
         # print(iter)
         
         # every other iteration, step in the opposite direction. When the leg is up against 2 of the 4 walls, the gradient descent will get stuck trying to step into the wall and getting a gradient of 0.
@@ -304,3 +371,65 @@ def inverse_kinematics(desired: np.ndarray, angles_guess: Tuple[float, float], m
             break
     
     return angle1, angle2, angle3, angle4
+
+def unstack(a, axis=0):
+    """
+    Handy function to unstack arrays, a is for array
+    """
+    return np.moveaxis(a, axis, 0)
+
+def trapezoid_gait(h = 125, bba = 230, bbb = 150, tbo = 60, gbo = -360, c = -30):
+    """
+    Function to generate the key features of a trapezoidal gait
+    
+    Inputs:
+        Key features of the trapezoid:
+            h = 150         # height of trapezoid
+            bba = 300	    # bottom width back offset
+            bbb = 140       # bottom width front offset
+            tbo = 60        # top width offset
+
+            # Don't change these 2 unless you know what you're doing
+            gbo = -350      # gait base offset
+            c = -10         # center of trapezoid
+
+    Outputs:
+        A 2D array containing the coordinates (x,y) of the trapezoidal gait
+    """
+
+    x = [c, c + bba, c + tbo, c - tbo, c - bbb, c]
+    y = [gbo, gbo, h + gbo, h + gbo, gbo, gbo]
+
+    coords = np.stack((x,y),axis=1)
+    return coords
+
+def generate_gait(gait_key_features, element = 20):
+    x, y = unstack(gait_key_features, axis=1)
+
+    gait_x = []
+    gait_y = []
+
+    for index in range(len(x)-1):
+        if x[index] < x[index + 1]:
+            i = np.linspace(x[index], x[index + 1], element)
+        else:
+            i = np.linspace(x[index + 1], x[index], element)
+            i = i[::-1]
+
+        if y[index] < y[index + 1]:
+            j = np.linspace(y[index], y[index + 1], element)
+        else:
+            j = np.linspace(y[index + 1], y[index], element)
+            j = j[::-1]
+
+        gait_x = np.concatenate((gait_x, i), axis=None)
+        gait_y = np.concatenate((gait_y, j), axis=None)
+
+    # using a filter to smooth out the data
+    win_size = element
+    poly = 1
+
+    gait_x = savgol_filter(gait_x, win_size, poly)
+    gait_y = savgol_filter(gait_y, win_size, poly)
+
+    return gait_x, gait_y
