@@ -1,6 +1,5 @@
-from kinematics import forward_kinematics, plot_leg_config, inverse_kinematics
+from kinematics import Leg
 import numpy as np
-
 
 # Input
 th_1 = 0  # Hip 1
@@ -13,9 +12,12 @@ desire = np.array([-50, 150, -255])
 
 guess = np.array([th_1, th_2, th_3, th_4, th_5])
 
+left_leg = Leg()
+# right_leg = Leg(False)
+
 # nth_1, nth_2, nth_3, nth_4 = inverse_kinematics(desire, guess)
 
-joints = forward_kinematics(th_1, th_2, th_3, th_4, th_5)
+joints = left_leg.forward_kinematics(th_1, th_2, th_3, th_4, th_5)
 print(joints)
 
-plot_leg_config(joints)
+left_leg.plot_leg_config(joints)

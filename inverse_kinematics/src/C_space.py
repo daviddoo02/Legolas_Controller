@@ -11,11 +11,6 @@ from cmath import pi
 
 
 
-
-
-
-
-
 d2r = np.deg2rad
 r2d = np.rad2deg
 

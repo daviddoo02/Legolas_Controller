@@ -354,8 +354,6 @@ class LegList:
         for leg in self.legs:
             leg.update()
 
-
-
 def render_leg(leg_list, leg, mouse, screen):
     scale = 1.25
     # render mouse dot
