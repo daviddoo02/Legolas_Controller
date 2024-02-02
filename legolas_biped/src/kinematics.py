@@ -347,7 +347,7 @@ class Leg:
         """
         return max(min(angle, max_angle), min_angle)
 
-    def inverse_kinematics(self, desired: np.ndarray, angles_guess: Tuple[float, float], max_iterations: int = 100, learning_rate: int = 0.1) -> Tuple[float, float]:
+    def inverse_kinematics(self, desired: np.ndarray, angles_guess: Tuple[float, float], max_iterations: int = 100) -> Tuple[float, float]:
         """
         Perform inverse kinematics using gradient descent.
 
@@ -365,7 +365,6 @@ class Leg:
             th1, th2, th3, th4, th5 = current
             current_pos = self.forward_kinematics(th1, th2, th3, th4, th5)[7]
             error = np.linalg.norm(current_pos - desired_pos)
-            # print(error)
             return error
 
         def error_function_foot(current: np.ndarray) -> float:
@@ -375,7 +374,6 @@ class Leg:
             desired_pos = self.forward_kinematics(
                 th1, th2, th3, th4, th5)[10][2]
             error = np.linalg.norm(current_pos - desired_pos)
-            print(error)
             return error
 
         angle1, angle2, angle3, angle4, angle5 = angles_guess
@@ -386,7 +384,10 @@ class Leg:
         step4 = 0.1
         step5 = 0.1
 
-        tolerance = 0.01  # stop when the error is less than this or when weve done max_iterations
+        learning_rate = 0.05
+        learning_rate_foot = 0.1
+
+        tolerance = 0.5  # stop when the error is less than this or when weve done max_iterations
         iter = 0
 
         for _ in range(max_iterations):
@@ -416,7 +417,7 @@ class Leg:
             grad3 = (error_angle3 - error) / step3
             grad4 = (error_angle4 - error) / step4
 
-            grad5 = (error_angle5 - error) / step5
+            grad5 = (error_angle5 - error_foot) / step5
 
             # step in the direction of the gradient. grad is the slope (rate of change), error is the distance, so in theory grad*error is the distance we want to step to get to the desired point in one step, but lmao no, multiply by really small fraction. 0.00001 is the largest that doesnt overshoot.
             angle1 -= grad1 * error * learning_rate
@@ -424,7 +425,7 @@ class Leg:
             angle3 -= grad3 * error * learning_rate
             angle4 -= grad4 * error * learning_rate
 
-            angle5 -= grad5 * error * 0.005
+            angle5 -= grad5 * error_foot * learning_rate_foot
 
             # Adjust to be in range
             angle1 = self.clamp_angle(angle1, self.angle1_min, self.angle1_max)
@@ -434,10 +435,7 @@ class Leg:
             angle5 = self.clamp_angle(angle5, self.angle5_min, self.angle5_max)
 
             iter += 1
-
-            # print(angle1, angle2, angle3, angle4)
-            # print(grad1, grad2, grad3, grad4)
-            # print(iter)
+            print(iter)
 
             # every other iteration, step in the opposite direction. When the leg is up against 2 of the 4 walls, the gradient descent will get stuck trying to step into the wall and getting a gradient of 0.
             step1 *= -1
@@ -446,7 +444,13 @@ class Leg:
             step4 *= -1
             step5 *= -1
 
-            if abs(error) and abs(error_foot) < tolerance:
+            print("Leg error: ", error)
+            print("Foot error: ", error_foot)
+
+            if (abs(error) < tolerance) and (abs(error_foot) < tolerance):
+                print("Breaking")
+                print("Leg error: ", error)
+                print("Foot error: ", error_foot)
                 break
 
         return angle1, angle2, angle3, angle4, angle5
