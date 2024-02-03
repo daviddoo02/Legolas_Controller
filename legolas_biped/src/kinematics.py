@@ -2,8 +2,6 @@ import numpy as np
 import matplotlib.pyplot as plt
 from scipy.optimize import least_squares
 from mpl_toolkits.mplot3d import Axes3D
-from mplcursors import cursor as mpl_cursor
-from matplotlib.widgets import Slider
 from typing import Tuple
 
 
@@ -110,14 +108,7 @@ def angle_between_vectors(v1, v2):
 
     return angle_in_degrees
 
-
-def plot_leg_config(joint_positions):
-    # Plotting the manipulator configuration
-    plt.close()
-
-    fig = plt.figure()
-    ax = fig.add_subplot(111, projection='3d')
-
+def plot_leg_single(joint_positions, ax):
     # Plotting the links
 
     # Scatter plot of joints
@@ -201,6 +192,18 @@ def plot_leg_config(joint_positions):
     for i, txt in enumerate(joint_positions):
         ax.text(txt[0], txt[1], txt[2], point_names[i],
                 color='red', fontsize=8)
+    
+    return
+
+
+def plot_leg_config(left_joint_positions, right_joint_positions):
+    plt.close()
+
+    fig = plt.figure()
+    ax = fig.add_subplot(111, projection='3d')
+
+    plot_leg_single(left_joint_positions, ax)
+    plot_leg_single(right_joint_positions, ax)
 
     # Setting labels
     ax.set_xlabel('X')
@@ -219,26 +222,36 @@ def plot_leg_config(joint_positions):
 
 class Leg:
     def __init__(self, left=True):
-        if left:
-            self.y01 = 104       # y distance to imu
+        # # Define angle limits in degrees
+        
+        self.angle2_min, self.angle2_max = -20, 20
+        self.angle3_min, self.angle3_max = -45, 65      # -65, 45
+        self.angle4_min, self.angle4_max = 0, 95        # -95, 0
+        self.angle5_min, self.angle5_max = -45, 60      # -60, 45
+        
+        self.left = left
 
-            # # Define angle limits in degrees
+        if self.left:
+            self.y01 = 104       # y distance to imu
             self.angle1_min, self.angle1_max = -15, 5
-            self.angle2_min, self.angle2_max = -20, 20
-            self.angle3_min, self.angle3_max = -65, 45
-            self.angle4_min, self.angle4_max = -95, 0
-            self.angle5_min, self.angle5_max = -60, 45
+            
         else:
             self.y01 = -104
+            self.angle1_min, self.angle1_max = -5, 15
 
     def forward_kinematics(self, hip1, hip2, thigh, foreleg, calf):
 
         # Initialize values for the joint angles (degrees)
-        th_1 = hip1
-        th_2 = hip2
-        th_3 = thigh + 65
-        th_4 = foreleg + 135
-        th_5 = calf - 15
+        if self.left:
+            th_1 = hip1
+            th_2 = -hip2
+        else:
+            th_1 = -hip1
+            th_2 = hip2
+
+        th_3 = -thigh + 65
+        th_4 = -foreleg + 135
+        th_5 = -calf - 15
 
         # Link lengths in centimeters -- From CAD
         z01 = 67.74         # z distance to imu
@@ -435,7 +448,7 @@ class Leg:
             angle5 = self.clamp_angle(angle5, self.angle5_min, self.angle5_max)
 
             iter += 1
-            print(iter)
+            # print(iter)
 
             # every other iteration, step in the opposite direction. When the leg is up against 2 of the 4 walls, the gradient descent will get stuck trying to step into the wall and getting a gradient of 0.
             step1 *= -1
@@ -448,7 +461,9 @@ class Leg:
             print("Foot error: ", error_foot)
 
             if (abs(error) < tolerance) and (abs(error_foot) < tolerance):
+                print("")
                 print("Breaking")
+                print("")
                 print("Leg error: ", error)
                 print("Foot error: ", error_foot)
                 break
