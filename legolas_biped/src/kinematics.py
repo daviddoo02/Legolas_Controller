@@ -4,6 +4,9 @@ from scipy.optimize import least_squares
 from mpl_toolkits.mplot3d import Axes3D
 from typing import Tuple
 
+__authors__ = "David Ho, Daniel Kutch"
+__license__ = "BSD-3-Clause"
+
 
 def DH_Transform(th, alp, r, d):
     theta = np.deg2rad(th)
@@ -360,7 +363,7 @@ class Leg:
         """
         return max(min(angle, max_angle), min_angle)
 
-    def inverse_kinematics(self, desired: np.ndarray, angles_guess: Tuple[float, float], max_iterations: int = 100) -> Tuple[float, float]:
+    def inverse_kinematics(self, desired: np.ndarray, angles_guess: Tuple[float, float], max_iterations: int = 200) -> Tuple[float, float]:
         """
         Perform inverse kinematics using gradient descent.
 
@@ -398,9 +401,9 @@ class Leg:
         step5 = 0.1
 
         learning_rate = 0.05
-        learning_rate_foot = 0.1
+        learning_rate_foot = 0.5
 
-        tolerance = 0.5  # stop when the error is less than this or when weve done max_iterations
+        tolerance = 0.1  # stop when the error is less than this or when weve done max_iterations
         iter = 0
 
         for _ in range(max_iterations):
@@ -457,15 +460,15 @@ class Leg:
             step4 *= -1
             step5 *= -1
 
-            print("Leg error: ", error)
-            print("Foot error: ", error_foot)
+            # print("Leg error: ", error)
+            # print("Foot error: ", error_foot)
 
             if (abs(error) < tolerance) and (abs(error_foot) < tolerance):
-                print("")
-                print("Breaking")
-                print("")
-                print("Leg error: ", error)
-                print("Foot error: ", error_foot)
+                # print("")
+                # print("Breaking")
+                # print("")
+                # print("Leg error: ", error)
+                # print("Foot error: ", error_foot)
                 break
 
         return angle1, angle2, angle3, angle4, angle5
