@@ -177,7 +177,7 @@ if __name__ == '__main__':
 
     biped = Biped()
 
-    rate = rospy.Rate(5)  # ROS Rate at 5Hz
+    # rate = rospy.Rate(5)  # ROS Rate at 5Hz
 
-    while not rospy.is_shutdown():
-        rate.sleep()
+    # while not rospy.is_shutdown():
+    #     rate.sleep()
