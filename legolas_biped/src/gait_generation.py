@@ -180,7 +180,7 @@ def main():
         print(left_leg_joint_angles[i])
 
     # Specify the file path for the CSV file
-    csv_file_path = 'gait_joint_angles.csv'
+    csv_file_path = 'gait_joint_angles_test.csv'
 
     # Open the CSV file in write mode
     with open(csv_file_path, mode='w', newline='') as csv_file:

@@ -1,0 +1,3 @@
+float32 servo_angle
+float32 encoder_voltage
+float32 encoder_value
