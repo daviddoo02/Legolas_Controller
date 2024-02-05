@@ -18,7 +18,7 @@ class Gait():
             self.left = True
         else:
             self.left = False
-    
+
     def trapezoid_gait(self):
         """
         Function to generate the key features of a trapezoidal gait
@@ -36,10 +36,13 @@ class Gait():
         gbo = -350      # gait base offset
         c = -64.35         # center of trapezoid
 
-        x = np.array([c,     c + bba,    c + tbo,    c - tbo,    c - bbb,    c])
-        z = np.array([gbo,   gbo,        h + gbo,    h + gbo,    gbo,        gbo])
-        y = np.array([115,   115,        105,        105,        115,        115])
-        
+        x = np.array([c,     c + bba,    c + tbo,
+                     c - tbo,    c - bbb,    c])
+        z = np.array([gbo,   gbo,        h + gbo,
+                     h + gbo,    gbo,        gbo])
+        y = np.array([115,   115,        105,
+                     105,        115,        115])
+
         # Set the timing of the gait for each leg:
 
         if not self.left:
@@ -63,9 +66,12 @@ class Gait():
             end_point_z = z[i + 1]
 
             # Linear interpolation between the current pair of key points for each dimension
-            interpolated_x = np.linspace(start_point_x, end_point_x, element + 2)[1:-1]
-            interpolated_y = np.linspace(start_point_y, end_point_y, element + 2)[1:-1]
-            interpolated_z = np.linspace(start_point_z, end_point_z, element + 2)[1:-1]
+            interpolated_x = np.linspace(
+                start_point_x, end_point_x, element + 2)[1:-1]
+            interpolated_y = np.linspace(
+                start_point_y, end_point_y, element + 2)[1:-1]
+            interpolated_z = np.linspace(
+                start_point_z, end_point_z, element + 2)[1:-1]
 
             # Append the interpolated points to the extrapolated arrays
             gait_x.extend(interpolated_x)
@@ -89,9 +95,12 @@ class Gait():
             start_element = - element
 
         # Rearrange the gait_coordinates to start at the specified element
-        smoothed_gait_x = np.concatenate((smoothed_gait_x[start_element:], smoothed_gait_x[:start_element]))
-        smoothed_gait_y = np.concatenate((smoothed_gait_y[start_element:], smoothed_gait_y[:start_element]))
-        smoothed_gait_z = np.concatenate((smoothed_gait_z[start_element:], smoothed_gait_z[:start_element]))
+        smoothed_gait_x = np.concatenate(
+            (smoothed_gait_x[start_element:], smoothed_gait_x[:start_element]))
+        smoothed_gait_y = np.concatenate(
+            (smoothed_gait_y[start_element:], smoothed_gait_y[:start_element]))
+        smoothed_gait_z = np.concatenate(
+            (smoothed_gait_z[start_element:], smoothed_gait_z[:start_element]))
 
         return smoothed_gait_x, smoothed_gait_y, smoothed_gait_z
 
@@ -112,6 +121,7 @@ def plot_gait(xl, yl, zl, xr, yr, zr):
 
     ax.axis('equal')
     return
+
 
 def main():
     # For each legs
@@ -153,8 +163,10 @@ def main():
         current_guess_r = np.array([rth_1, rth_2, rth_3, rth_4, rth_5])
 
         # Calculate inverse kinematics for both legs
-        lth_1, lth_2, lth_3, lth_4, lth_5 = left_leg.inverse_kinematics(left_gait_point, current_guess_l)
-        rth_1, rth_2, rth_3, rth_4, rth_5 = right_leg.inverse_kinematics(right_gait_point, current_guess_r)
+        lth_1, lth_2, lth_3, lth_4, lth_5 = left_leg.inverse_kinematics(
+            left_gait_point, current_guess_l)
+        rth_1, rth_2, rth_3, rth_4, rth_5 = right_leg.inverse_kinematics(
+            right_gait_point, current_guess_r)
 
         # Append the joint angles for the current step to the arrays
         left_leg_joint_angles.append([lth_1, lth_2, lth_3, lth_4, lth_5])
@@ -162,16 +174,12 @@ def main():
         print(left_leg_joint_angles[i])
 
     # Specify the file path for the CSV file
-    csv_file_path = 'joint_angles_data.csv'
+    csv_file_path = 'gait_joint_angles.csv'
 
     # Open the CSV file in write mode
     with open(csv_file_path, mode='w', newline='') as csv_file:
         # Create a CSV writer object
         csv_writer = csv.writer(csv_file)
-
-        # Write a header row (optional)
-        csv_writer.writerow(['Step', 'Left Leg Joint 1', 'Left Leg Joint 2', 'Left Leg Joint 3', 'Left Leg Joint 4', 'Left Leg Joint 5',
-                            'Right Leg Joint 1', 'Right Leg Joint 2', 'Right Leg Joint 3', 'Right Leg Joint 4', 'Right Leg Joint 5'])
 
         # Write the joint angles for each step
         for i in range(len(xl)):
@@ -180,9 +188,10 @@ def main():
             right_joint_angles = right_leg_joint_angles[i]
 
             # Write the data to the CSV file
-            csv_writer.writerow([i] + left_joint_angles + right_joint_angles)
+            csv_writer.writerow(left_joint_angles + right_joint_angles)
 
-    print(f'Joint angles data has been successfully written to {csv_file_path}')
+    print(
+        f'Joint angles data has been successfully written to {csv_file_path}')
 
     # desire_left = np.array([-64.35, 120, -350])
     # desire_right = np.array([-64.35, -120, -350])
@@ -204,6 +213,7 @@ def main():
     # plot_leg_config(left_joints, right_joints)
 
     return
+
 
 if __name__ == '__main__':
     main()
