@@ -111,6 +111,7 @@ def angle_between_vectors(v1, v2):
 
     return angle_in_degrees
 
+
 def plot_leg_single(joint_positions, ax):
     # Plotting the links
 
@@ -195,7 +196,7 @@ def plot_leg_single(joint_positions, ax):
     for i, txt in enumerate(joint_positions):
         ax.text(txt[0], txt[1], txt[2], point_names[i],
                 color='red', fontsize=8)
-    
+
     return
 
 
@@ -226,18 +227,18 @@ def plot_leg_config(left_joint_positions, right_joint_positions):
 class Leg:
     def __init__(self, left=True):
         # # Define angle limits in degrees
-        
+
         self.angle2_min, self.angle2_max = -20, 20
         self.angle3_min, self.angle3_max = -45, 65      # -65, 45
         self.angle4_min, self.angle4_max = 0, 95        # -95, 0
         self.angle5_min, self.angle5_max = -45, 60      # -60, 45
-        
+
         self.left = left
 
         if self.left:
             self.y01 = 104       # y distance to imu
             self.angle1_min, self.angle1_max = -15, 5
-            
+
         else:
             self.y01 = -104
             self.angle1_min, self.angle1_max = -5, 15
@@ -471,4 +472,4 @@ class Leg:
                 # print("Foot error: ", error_foot)
                 break
 
-        return angle1.round(2), angle2.round(2), angle3.round(2), angle4.round(2), angle5.round(2)
+        return angle1, angle2, angle3, angle4, angle5

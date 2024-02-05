@@ -40,8 +40,8 @@ class Gait():
                      c - tbo,    c - bbb,    c])
         z = np.array([gbo,   gbo,        h + gbo,
                      h + gbo,    gbo,        gbo])
-        y = np.array([125,   125,        115,
-                     115,        125,        125])
+        y = np.array([95,   95,        105,
+                     105,        95,        95])
 
         # Set the timing of the gait for each leg:
 
@@ -111,8 +111,8 @@ def plot_gait(xl, yl, zl, xr, yr, zr):
     fig = plt.figure()
     ax = fig.add_subplot(111, projection='3d')
 
-    ax.scatter(xl, yl, zl)
-    ax.scatter(xr, yr, zr)
+    ax.scatter(xl, yl, zl, c='blue')
+    ax.scatter(xr, yr, zr, c='orange')
 
     # Set labels for each axis
     ax.set_xlabel('X-axis')
@@ -149,8 +149,10 @@ def main():
     xl, yl, zl = left_gait.generate_gait(10)
     xr, yr, zr = right_gait.generate_gait(10)
 
-    # plot_gait(xl, yl, zl, xr, yr, zr)
-    # plt.show()
+    plot_gait(xl, yl, zl, xr, yr, zr)
+    plt.show()
+
+    # BEGIN GAIT GENERATION AND SAVE TO CSV
 
     # Initialize empty arrays to store joint angles
     left_leg_joint_angles = []
@@ -196,6 +198,8 @@ def main():
 
     print(
         f'Joint angles data has been successfully written to {csv_file_path}')
+
+    # DRAFT:
 
     # desire_left = np.array([-64.35, 120, -350])
     # desire_right = np.array([-64.35, -120, -350])
