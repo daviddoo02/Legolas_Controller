@@ -471,4 +471,4 @@ class Leg:
                 # print("Foot error: ", error_foot)
                 break
 
-        return angle1, angle2, angle3, angle4, angle5
+        return angle1.round(2), angle2.round(2), angle3.round(2), angle4.round(2), angle5.round(2)
