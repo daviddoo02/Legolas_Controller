@@ -40,8 +40,8 @@ class Gait():
                      c - tbo,    c - bbb,    c])
         z = np.array([gbo,   gbo,        h + gbo,
                      h + gbo,    gbo,        gbo])
-        y = np.array([115,   115,        105,
-                     105,        115,        115])
+        y = np.array([125,   125,        115,
+                     115,        125,        125])
 
         # Set the timing of the gait for each leg:
 
@@ -102,7 +102,7 @@ class Gait():
         smoothed_gait_z = np.concatenate(
             (smoothed_gait_z[start_element:], smoothed_gait_z[:start_element]))
 
-        return smoothed_gait_x, smoothed_gait_y, smoothed_gait_z
+        return smoothed_gait_x[::-1], smoothed_gait_y[::-1], smoothed_gait_z[::-1]
 
 
 def plot_gait(xl, yl, zl, xr, yr, zr):
