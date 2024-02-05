@@ -137,6 +137,9 @@ def main():
     rth_4 = 78.5  # Foreleg
     rth_5 = 7.4  # Calf
 
+    current_guess_l = np.array([lth_1, lth_2, lth_3, lth_4, lth_5])
+    current_guess_r = np.array([rth_1, rth_2, rth_3, rth_4, rth_5])
+
     left_gait = Gait()
     right_gait = Gait(False)
 
@@ -158,10 +161,6 @@ def main():
         left_gait_point = np.array([xl[i], yl[i], zl[i]])
         right_gait_point = np.array([xr[i], yr[i], zr[i]])
 
-        # Get the current guess for joint angles
-        current_guess_l = np.array([lth_1, lth_2, lth_3, lth_4, lth_5])
-        current_guess_r = np.array([rth_1, rth_2, rth_3, rth_4, rth_5])
-
         # Calculate inverse kinematics for both legs
         lth_1, lth_2, lth_3, lth_4, lth_5 = left_leg.inverse_kinematics(
             left_gait_point, current_guess_l)
@@ -171,6 +170,11 @@ def main():
         # Append the joint angles for the current step to the arrays
         left_leg_joint_angles.append([lth_1, lth_2, lth_3, lth_4, lth_5])
         right_leg_joint_angles.append([rth_1, rth_2, rth_3, rth_4, rth_5])
+
+        # Get the current guess for joint angles
+        current_guess_l = np.array(left_leg_joint_angles[i])
+        current_guess_r = np.array(right_leg_joint_angles[i])
+
         print(left_leg_joint_angles[i])
 
     # Specify the file path for the CSV file
