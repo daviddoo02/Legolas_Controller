@@ -76,22 +76,56 @@ class Servo_Calibrate:
         self.calibrate()
     
     def reset(self):
-        # Standing 1 config
+        # # Standing 1 config
 
-        self.RHip1_servo.angle      = 15
-        self.LHip1_servo.angle      = 175
+        # self.RHip1_servo.angle      = 15
+        # self.LHip1_servo.angle      = 175
 
-        self.RHip2_servo.angle      = 80
-        self.LHip2_servo.angle      = 100
+        # self.RHip2_servo.angle      = 80
+        # self.LHip2_servo.angle      = 100
+
+        # self.RThigh_servo.angle     = 110
+        # self.LThigh_servo.angle     = 65
+
+        # self.RForeleg_servo.angle   = 190
+        # self.LForeleg_servo.angle   = 155
+
+        # self.RCalf_servo.angle      = 90
+        # self.LCalf_servo.angle      = 185
+
+        # # Crouching 0 config
+
+        # self.RHip1_servo.angle      = 5
+        # self.LHip1_servo.angle      = 184
+
+        # self.RHip2_servo.angle      = 100
+        # self.LHip2_servo.angle      = 80
+
+        # self.RThigh_servo.angle     = 110
+        # self.LThigh_servo.angle     = 65
+
+        # self.RForeleg_servo.angle   = 120
+        # self.LForeleg_servo.angle   = 230
+
+        # self.RCalf_servo.angle      = 85
+        # self.LCalf_servo.angle      = 190
+
+        # Crouching 0 config
+
+        self.RHip1_servo.angle      = 5
+        self.LHip1_servo.angle      = 184
+
+        self.RHip2_servo.angle      = 100
+        self.LHip2_servo.angle      = 80
 
         self.RThigh_servo.angle     = 110
         self.LThigh_servo.angle     = 65
 
-        self.RForeleg_servo.angle   = 190
-        self.LForeleg_servo.angle   = 155
+        self.RForeleg_servo.angle   = 120
+        self.LForeleg_servo.angle   = 230
 
-        self.RCalf_servo.angle      = 90
-        self.LCalf_servo.angle      = 185
+        self.RCalf_servo.angle      = 85
+        self.LCalf_servo.angle      = 190
 
         time.sleep(3)
         
@@ -99,27 +133,27 @@ class Servo_Calibrate:
 
     def calibrate(self):
 
-        print("Calibrating Right Leg ...")
+        # print("Calibrating Right Leg ...")
 
-        right_servos = [self.RHip1_servo, self.RHip2_servo, self.RThigh_servo, self.RForeleg_servo, self.RCalf_servo]
-        right_servos_reading = [self.RHip1_reading, self.RHip2_reading, self.RThigh_reading, self.RForeleg_reading, self.RCalf_reading]
-        right_ROM = [[0, 20, 15], [120, 70, 80], [70, 170, 110], [120, 230, 190], [45, 140, 90]]
+        # right_servos = [self.RHip1_servo, self.RHip2_servo, self.RThigh_servo, self.RForeleg_servo, self.RCalf_servo]
+        # right_servos_reading = [self.RHip1_reading, self.RHip2_reading, self.RThigh_reading, self.RForeleg_reading, self.RCalf_reading]
+        # right_ROM = [[0, 20, 15], [120, 70, 80], [70, 170, 110], [120, 230, 190], [45, 140, 90]]
 
-        for servo_id in range(5):
-            # Go to min position
-            right_servos[servo_id].angle = right_ROM[servo_id][0]
-            time.sleep(3)
-            print(right_servos_reading[servo_id].voltage)
+        # for servo_id in range(5):
+        #     # Go to min position
+        #     right_servos[servo_id].angle = right_ROM[servo_id][0]
+        #     time.sleep(3)
+        #     print(right_servos_reading[servo_id].voltage)
 
-            # Go to max position
-            right_servos[servo_id].angle = right_ROM[servo_id][1]
-            time.sleep(3)
-            print(right_servos_reading[servo_id].voltage)
+        #     # Go to max position
+        #     right_servos[servo_id].angle = right_ROM[servo_id][1]
+        #     time.sleep(3)
+        #     print(right_servos_reading[servo_id].voltage)
 
-            # Go to 0 position
-            right_servos[servo_id].angle = right_ROM[servo_id][2]
-            time.sleep(3)
-            print(right_servos_reading[servo_id].voltage)
+        #     # Go to 0 position
+        #     right_servos[servo_id].angle = right_ROM[servo_id][2]
+        #     time.sleep(3)
+        #     print(right_servos_reading[servo_id].voltage)
 
         return
         

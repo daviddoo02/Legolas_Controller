@@ -26,6 +26,11 @@ class Biped:
 
         self.joint = rospy.Subscriber(sub_topic, joint_angles, self.move_biped)
 
+        rospy.init_node('biped')
+
+        while not rospy.is_shutdown():
+            rospy.spin()
+
     def initialize_servos(self):
 
         # Declaring pin numbers of each servos on servo driver
@@ -173,8 +178,6 @@ class Biped:
 
 
 if __name__ == '__main__':
-    rospy.init_node('biped')
-
     biped = Biped()
 
     # rate = rospy.Rate(5)  # ROS Rate at 5Hz

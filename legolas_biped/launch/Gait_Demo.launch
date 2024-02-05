@@ -1,9 +1,9 @@
 <launch>
     <node name="joy" pkg="joy" type="joy_node" >
-        <param name="autorepeat_rate" value="30" />
+        <param name="autorepeat_rate" value="60" />
         </node>
-    <node name="joy_throttled" type="throttle" pkg="topic_tools" args="messages /joy 10 /joy_throttled" />
+    <node name="joy_throttled" type="throttle" pkg="topic_tools" args="messages /joy 40 /joy_throttled" />
     <node name="gait_commands" pkg="legolas_biped" type="gait_command_node.py" cwd="node"/>
-    <node name="servos_manager_node" pkg="legolas_biped" type="servos_manager_node.py" cwd="node"/>
+    <node name="biped" pkg="legolas_biped" type="servos_manager_node.py" cwd="node"/>
     <node pkg="rostopic" type="rostopic" name="rostopic_echo_node" output="screen" args="echo /joint_angles" />
 </launch>

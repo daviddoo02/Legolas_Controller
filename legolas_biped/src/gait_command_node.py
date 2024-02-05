@@ -33,7 +33,7 @@ class Gait_Publisher():
             rospy.spin()
 
     def publish_gait_joint(self, i):
-        self.gait_joint_msg.Left_Joints = self.gait[i][0:4]
+        self.gait_joint_msg.Left_Joints = self.gait[i][0:5]
         self.gait_joint_msg.Right_Joints = self.gait[i][5:]
 
         rospy.loginfo(self.gait_joint_msg)
