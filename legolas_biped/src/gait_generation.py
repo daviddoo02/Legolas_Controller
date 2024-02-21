@@ -27,7 +27,7 @@ class Gait():
             A 2D array containing the coordinates (x,y) of the trapezoidal gait
         """
 
-        h = 50         # height of trapezoid
+        h = 20         # height of trapezoid
         bba = 50	    # bottom width front offset
         bbb = 50       # bottom width back offset
         tbo = 30        # top width offset
@@ -40,8 +40,8 @@ class Gait():
                      c - tbo*0,    c - bbb,    c])
         z = np.array([gbo,   gbo,        h + gbo,
                      h + gbo,    gbo,        gbo])
-        y = np.array([95,   95,        105,
-                     105,        95,        95])
+        y = np.array([95,   95,        95,
+                     95,        95,        95])
 
         # Set the timing of the gait for each leg:
 
