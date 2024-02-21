@@ -34,10 +34,10 @@ class Gait():
 
         # Don't change these 2 unless you know what you're doing
         gbo = -350      # gait base offset
-        c = -64.35         # center of trapezoid
+        c = -64.35 + 30         # center of trapezoid
 
         x = np.array([c,     c + bba,    c + tbo,
-                     c - tbo,    c - bbb,    c])
+                     c - tbo*0,    c - bbb,    c])
         z = np.array([gbo,   gbo,        h + gbo,
                      h + gbo,    gbo,        gbo])
         y = np.array([95,   95,        105,

@@ -58,7 +58,7 @@ class Gait_Publisher():
 if __name__ == '__main__':
     try:
         # Assuming 'your_file.csv' is the CSV file containing the data
-        file_path = 'gait_joint_angles.csv'
+        file_path = 'gait_joint_angles_test.csv'
 
         input_gait = []
         with open(file_path) as csvfile:

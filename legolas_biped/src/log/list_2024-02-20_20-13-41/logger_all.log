@@ -1,0 +1,54 @@
+[3.092s] DEBUG:colcon:Command line arguments: ['/usr/bin/colcon', 'list', '-p', '--base-paths', '/home/homandat02/Legolas/robot_control_ws/src/legolas_biped/src']
+[3.092s] DEBUG:colcon:Parsed command line arguments: Namespace(allow_overriding=[], base_paths=['/home/homandat02/Legolas/robot_control_ws/src/legolas_biped/src'], build_base='build', ignore_user_meta=False, log_base=None, log_level=None, main=<bound method ListVerb.main of <colcon_package_information.verb.list.ListVerb object at 0x7f40f8f37c40>>, metas=['./colcon.meta'], names_only=False, packages_above=None, packages_above_and_dependencies=None, packages_above_depth=None, packages_end=None, packages_ignore=None, packages_ignore_regex=None, packages_select=None, packages_select_build_failed=False, packages_select_by_dep=None, packages_select_regex=None, packages_select_test_failures=False, packages_skip=None, packages_skip_build_finished=False, packages_skip_by_dep=None, packages_skip_regex=None, packages_skip_test_passed=False, packages_skip_up_to=None, packages_start=None, packages_up_to=None, packages_up_to_regex=None, paths=None, paths_only=True, topological_graph=False, topological_graph_density=False, topological_graph_dot=False, topological_graph_dot_cluster=False, topological_graph_dot_include_skipped=False, topological_graph_legend=False, topological_order=False, verb_extension=<colcon_package_information.verb.list.ListVerb object at 0x7f40f8f37c40>, verb_name='list', verb_parser=<colcon_defaults.argument_parser.defaults.DefaultArgumentsDecorator object at 0x7f40f8ee8340>)
+[3.240s] Level 1:colcon.colcon_core.package_discovery:discover_packages(colcon_meta) check parameters
+[3.240s] Level 1:colcon.colcon_core.package_discovery:discover_packages(recursive) check parameters
+[3.240s] Level 1:colcon.colcon_core.package_discovery:discover_packages(ignore) check parameters
+[3.240s] Level 1:colcon.colcon_core.package_discovery:discover_packages(path) check parameters
+[3.240s] Level 1:colcon.colcon_core.package_discovery:discover_packages(recursive) discover
+[3.240s] INFO:colcon.colcon_core.package_discovery:Crawling recursively for packages in '/home/homandat02/Legolas/robot_control_ws/src/legolas_biped/src'
+[3.241s] Level 1:colcon.colcon_core.package_identification:_identify(/home/homandat02/Legolas/robot_control_ws/src/legolas_biped/src) by extensions ['ignore', 'ignore_ament_install']
+[3.241s] Level 1:colcon.colcon_core.package_identification:_identify(/home/homandat02/Legolas/robot_control_ws/src/legolas_biped/src) by extension 'ignore'
+[3.241s] Level 1:colcon.colcon_core.package_identification:_identify(/home/homandat02/Legolas/robot_control_ws/src/legolas_biped/src) by extension 'ignore_ament_install'
+[3.241s] Level 1:colcon.colcon_core.package_identification:_identify(/home/homandat02/Legolas/robot_control_ws/src/legolas_biped/src) by extensions ['colcon_pkg']
+[3.241s] Level 1:colcon.colcon_core.package_identification:_identify(/home/homandat02/Legolas/robot_control_ws/src/legolas_biped/src) by extension 'colcon_pkg'
+[3.241s] Level 1:colcon.colcon_core.package_identification:_identify(/home/homandat02/Legolas/robot_control_ws/src/legolas_biped/src) by extensions ['colcon_meta']
+[3.241s] Level 1:colcon.colcon_core.package_identification:_identify(/home/homandat02/Legolas/robot_control_ws/src/legolas_biped/src) by extension 'colcon_meta'
+[3.241s] Level 1:colcon.colcon_core.package_identification:_identify(/home/homandat02/Legolas/robot_control_ws/src/legolas_biped/src) by extensions ['ros']
+[3.241s] Level 1:colcon.colcon_core.package_identification:_identify(/home/homandat02/Legolas/robot_control_ws/src/legolas_biped/src) by extension 'ros'
+[3.257s] Level 1:colcon.colcon_core.package_identification:_identify(/home/homandat02/Legolas/robot_control_ws/src/legolas_biped/src) by extensions ['cmake', 'python']
+[3.257s] Level 1:colcon.colcon_core.package_identification:_identify(/home/homandat02/Legolas/robot_control_ws/src/legolas_biped/src) by extension 'cmake'
+[3.257s] Level 1:colcon.colcon_core.package_identification:_identify(/home/homandat02/Legolas/robot_control_ws/src/legolas_biped/src) by extension 'python'
+[3.257s] Level 1:colcon.colcon_core.package_identification:_identify(/home/homandat02/Legolas/robot_control_ws/src/legolas_biped/src) by extensions ['python_setup_py']
+[3.257s] Level 1:colcon.colcon_core.package_identification:_identify(/home/homandat02/Legolas/robot_control_ws/src/legolas_biped/src) by extension 'python_setup_py'
+[3.257s] Level 1:colcon.colcon_core.package_identification:_identify(/home/homandat02/Legolas/robot_control_ws/src/legolas_biped/src/__pycache__) by extensions ['ignore', 'ignore_ament_install']
+[3.257s] Level 1:colcon.colcon_core.package_identification:_identify(/home/homandat02/Legolas/robot_control_ws/src/legolas_biped/src/__pycache__) by extension 'ignore'
+[3.258s] Level 1:colcon.colcon_core.package_identification:_identify(/home/homandat02/Legolas/robot_control_ws/src/legolas_biped/src/__pycache__) by extension 'ignore_ament_install'
+[3.258s] Level 1:colcon.colcon_core.package_identification:_identify(/home/homandat02/Legolas/robot_control_ws/src/legolas_biped/src/__pycache__) by extensions ['colcon_pkg']
+[3.258s] Level 1:colcon.colcon_core.package_identification:_identify(/home/homandat02/Legolas/robot_control_ws/src/legolas_biped/src/__pycache__) by extension 'colcon_pkg'
+[3.258s] Level 1:colcon.colcon_core.package_identification:_identify(/home/homandat02/Legolas/robot_control_ws/src/legolas_biped/src/__pycache__) by extensions ['colcon_meta']
+[3.258s] Level 1:colcon.colcon_core.package_identification:_identify(/home/homandat02/Legolas/robot_control_ws/src/legolas_biped/src/__pycache__) by extension 'colcon_meta'
+[3.258s] Level 1:colcon.colcon_core.package_identification:_identify(/home/homandat02/Legolas/robot_control_ws/src/legolas_biped/src/__pycache__) by extensions ['ros']
+[3.258s] Level 1:colcon.colcon_core.package_identification:_identify(/home/homandat02/Legolas/robot_control_ws/src/legolas_biped/src/__pycache__) by extension 'ros'
+[3.258s] Level 1:colcon.colcon_core.package_identification:_identify(/home/homandat02/Legolas/robot_control_ws/src/legolas_biped/src/__pycache__) by extensions ['cmake', 'python']
+[3.258s] Level 1:colcon.colcon_core.package_identification:_identify(/home/homandat02/Legolas/robot_control_ws/src/legolas_biped/src/__pycache__) by extension 'cmake'
+[3.258s] Level 1:colcon.colcon_core.package_identification:_identify(/home/homandat02/Legolas/robot_control_ws/src/legolas_biped/src/__pycache__) by extension 'python'
+[3.258s] Level 1:colcon.colcon_core.package_identification:_identify(/home/homandat02/Legolas/robot_control_ws/src/legolas_biped/src/__pycache__) by extensions ['python_setup_py']
+[3.258s] Level 1:colcon.colcon_core.package_identification:_identify(/home/homandat02/Legolas/robot_control_ws/src/legolas_biped/src/__pycache__) by extension 'python_setup_py'
+[3.258s] Level 1:colcon.colcon_core.package_identification:_identify(/home/homandat02/Legolas/robot_control_ws/src/legolas_biped/src/draft) by extensions ['ignore', 'ignore_ament_install']
+[3.259s] Level 1:colcon.colcon_core.package_identification:_identify(/home/homandat02/Legolas/robot_control_ws/src/legolas_biped/src/draft) by extension 'ignore'
+[3.259s] Level 1:colcon.colcon_core.package_identification:_identify(/home/homandat02/Legolas/robot_control_ws/src/legolas_biped/src/draft) by extension 'ignore_ament_install'
+[3.259s] Level 1:colcon.colcon_core.package_identification:_identify(/home/homandat02/Legolas/robot_control_ws/src/legolas_biped/src/draft) by extensions ['colcon_pkg']
+[3.259s] Level 1:colcon.colcon_core.package_identification:_identify(/home/homandat02/Legolas/robot_control_ws/src/legolas_biped/src/draft) by extension 'colcon_pkg'
+[3.259s] Level 1:colcon.colcon_core.package_identification:_identify(/home/homandat02/Legolas/robot_control_ws/src/legolas_biped/src/draft) by extensions ['colcon_meta']
+[3.259s] Level 1:colcon.colcon_core.package_identification:_identify(/home/homandat02/Legolas/robot_control_ws/src/legolas_biped/src/draft) by extension 'colcon_meta'
+[3.259s] Level 1:colcon.colcon_core.package_identification:_identify(/home/homandat02/Legolas/robot_control_ws/src/legolas_biped/src/draft) by extensions ['ros']
+[3.259s] Level 1:colcon.colcon_core.package_identification:_identify(/home/homandat02/Legolas/robot_control_ws/src/legolas_biped/src/draft) by extension 'ros'
+[3.259s] Level 1:colcon.colcon_core.package_identification:_identify(/home/homandat02/Legolas/robot_control_ws/src/legolas_biped/src/draft) by extensions ['cmake', 'python']
+[3.259s] Level 1:colcon.colcon_core.package_identification:_identify(/home/homandat02/Legolas/robot_control_ws/src/legolas_biped/src/draft) by extension 'cmake'
+[3.259s] Level 1:colcon.colcon_core.package_identification:_identify(/home/homandat02/Legolas/robot_control_ws/src/legolas_biped/src/draft) by extension 'python'
+[3.259s] Level 1:colcon.colcon_core.package_identification:_identify(/home/homandat02/Legolas/robot_control_ws/src/legolas_biped/src/draft) by extensions ['python_setup_py']
+[3.259s] Level 1:colcon.colcon_core.package_identification:_identify(/home/homandat02/Legolas/robot_control_ws/src/legolas_biped/src/draft) by extension 'python_setup_py'
+[3.260s] Level 1:colcon.colcon_core.package_identification:_identify(/home/homandat02/Legolas/robot_control_ws/src/legolas_biped/src/log) by extensions ['ignore', 'ignore_ament_install']
+[3.260s] Level 1:colcon.colcon_core.package_identification:_identify(/home/homandat02/Legolas/robot_control_ws/src/legolas_biped/src/log) by extension 'ignore'
+[3.260s] Level 1:colcon.colcon_core.package_identification:_identify(/home/homandat02/Legolas/robot_control_ws/src/legolas_biped/src/log) ignored
+[3.260s] Level 1:colcon.colcon_core.package_discovery:discover_packages(recursive) using defaults
