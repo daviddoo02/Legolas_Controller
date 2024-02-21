@@ -49,9 +49,9 @@ class Gait_Publisher():
 
         if buttons[5] == 1:
             self.publish_gait_joint(self.index)
-            self.index += 1
+            self.index += 2
 
-            if self.index == len(self.gait):
+            if (self.index == len(self.gait)) or (self.index > len(self.gait)):
                 self.index = 0
 
 
