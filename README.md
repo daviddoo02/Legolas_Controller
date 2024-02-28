@@ -7,7 +7,7 @@ Legolas is a mini bipedal robot inspired by the Cassie by Agility Robotics. The 
 </p>
 
 <p align="center">
-  <a href="assets/Walking_Test_3.mp4"><img src="assets/Walking_Test_2.gif" alt="Video 3" width="400"></a>
+  <a href="assets/Walking_Test_3.mp4"><img src="assets/Walking_Test_3.gif" alt="Video 3" width="400"></a>
 </p>
 
 ## Repository Contents
