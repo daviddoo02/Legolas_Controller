@@ -3,11 +3,11 @@
 Legolas is a mini bipedal robot inspired by the Cassie by Agility Robotics. The project aims to provide an open-source platform for learning and applying reinforcement learning in robotics.
 
 <p align="center">
-  <a href="assets/Walking_Test_1.mp4"><img src="assets/Walking_Test_1.gif" alt="Video 1" width="400"></a>
+  <a href="assets/Walking_Test_3.mp4"><img src="assets/Walking_Test_3.gif" alt="Video 3" width="800"></a>
 </p>
 
 <p align="center">
-  <a href="assets/Walking_Test_3.mp4"><img src="assets/Walking_Test_3.gif" alt="Video 3" width="400"></a>
+  <a href="assets/Walking_Test_1.mp4"><img src="assets/Walking_Test_1.gif" alt="Video 1" width="800"></a>
 </p>
 
 ## Repository Contents
