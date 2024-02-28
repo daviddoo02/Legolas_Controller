@@ -33,7 +33,7 @@ The CADs for the robot is available at [Legolas - an open source Biped](https://
 2. **In the root of the repository, run catkin_make to build the packages:**
 
     ```bash
-    catkin_Make
+    catkin_make
     ```
 
 3. **Launch the walking gait:**
