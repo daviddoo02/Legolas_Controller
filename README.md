@@ -1,4 +1,4 @@
-# Legolas Controller - A ROS Package for Legolas
+# A ROS Package for Legolas
 
 Legolas is a mini bipedal robot inspired by the Cassie by Agility Robotics. The project aims to provide an open-source platform for learning and applying reinforcement learning in robotics.
 
