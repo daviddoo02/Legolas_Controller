@@ -3,8 +3,6 @@ import numpy as np
 import matplotlib.pyplot as plt
 from matplotlib.widgets import Button, Slider
 
-
-
 # Input
 th_1 = 0  # Hip 1
 th_2 = 0  # Hip 2

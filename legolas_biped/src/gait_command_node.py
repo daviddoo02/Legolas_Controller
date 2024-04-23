@@ -2,7 +2,7 @@
 
 import rospy
 from legolas_biped.msg import joint_angles
-from sensor_msgs.msg import Joy
+# from sensor_msgs.msg import Joy
 import time
 import csv
 import numpy as np
@@ -14,14 +14,15 @@ __license__ = "BSD-3-Clause"
 class Gait_Publisher():
     def __init__(self, gait_csv) -> None:
         # rate = rospy.Rate(30)
+        rospy.init_node('gait_publisher_node')
 
         pub_topic = 'joint_angles'
         self.gait_pub = rospy.Publisher(pub_topic, joint_angles, queue_size=1)
 
-        sub_topic = 'joy_throttled'
-        self.JoySub = rospy.Subscriber(sub_topic, Joy, self.main)
+        # sub_topic = 'joy_throttled'
+        # self.JoySub = rospy.Subscriber(sub_topic, Joy, self.main)
 
-        rospy.init_node('gait_publisher_node')
+        rate = rospy.Rate(40)
 
         self.gait_joint_msg = joint_angles()
 
@@ -30,7 +31,8 @@ class Gait_Publisher():
         self.index = 0
 
         while not rospy.is_shutdown():
-            rospy.spin()
+            self.main()
+            rate.sleep()
 
     def publish_gait_joint(self, i):
         self.gait_joint_msg.Left_Joints = self.gait[i][0:5]
@@ -41,18 +43,12 @@ class Gait_Publisher():
 
         return
 
-    def buttons_callback(self, msg):
-        return msg.buttons
+    def main(self):
+        self.publish_gait_joint(self.index)
+        self.index += 1
 
-    def main(self, msg):
-        buttons = self.buttons_callback(msg)
-
-        if buttons[5] == 1:
-            self.publish_gait_joint(self.index)
-            self.index += 2
-
-            if (self.index == len(self.gait)) or (self.index > len(self.gait)):
-                self.index = 0
+        if (self.index == len(self.gait)) or (self.index > len(self.gait)):
+            self.index = 0
 
 
 if __name__ == '__main__':

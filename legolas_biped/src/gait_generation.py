@@ -9,7 +9,7 @@ from mpl_toolkits.mplot3d import Axes3D
 from kinematics import Leg, plot_leg_config
 
 __authors__ = "David Ho"
-__license__ = "BSD-3-Clause"
+# __license__ = "BSD-3-Clause"
 
 
 class Gait():
