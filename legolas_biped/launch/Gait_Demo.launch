@@ -1,4 +1,0 @@
-<launch>
-    <node name="gait_commands" pkg="legolas_biped" type="gait_command_node.py" cwd="node"/>
-    <node name="biped" pkg="legolas_biped" type="servos_manager_node.py" cwd="node"/>
-</launch>

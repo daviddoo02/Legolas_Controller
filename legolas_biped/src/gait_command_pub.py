@@ -22,7 +22,7 @@ class Gait_Publisher():
         # sub_topic = 'joy_throttled'
         # self.JoySub = rospy.Subscriber(sub_topic, Joy, self.main)
 
-        rate = rospy.Rate(40)
+        rate = rospy.Rate(30)
 
         self.gait_joint_msg = joint_angles()
 

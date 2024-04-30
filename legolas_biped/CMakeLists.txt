@@ -51,6 +51,7 @@ add_message_files(
   FILES
   joint_angles.msg
   joint_readings.msg
+  imu_readings.msg
 )
 
 ## Generate services in the 'srv' folder

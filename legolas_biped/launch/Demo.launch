@@ -1,0 +1,7 @@
+<launch>
+    <node name="gait_commands" pkg="legolas_biped" type="gait_command_pub.py" cwd="node"/>
+    <node name="servos" pkg="legolas_biped" type="servo_sub_node.py" cwd="node"/>
+    <node name="left_pots" pkg="legolas_biped" type="joint_states_pub.py" cwd="node"/>
+    <node name="right_pots" pkg="legolas_biped" type="joint_states_pub.py" args="--right" cwd="node"/>
+    <node name="imu" pkg="legolas_biped" type="imu_pub.py" cwd="node"/>
+</launch>

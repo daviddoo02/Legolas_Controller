@@ -26,10 +26,12 @@ class Biped:
 
         self.joint = rospy.Subscriber(sub_topic, joint_angles, self.move_biped)
 
-        rospy.init_node('biped')
+        rospy.init_node('servo')
 
         while not rospy.is_shutdown():
             rospy.spin()
+
+        rospy.on_shutdown(self.reset_biped)
 
     def initialize_servos(self):
 

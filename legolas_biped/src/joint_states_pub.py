@@ -1,31 +1,52 @@
 #!/usr/bin/env python3
 import rospy
 from legolas_biped.msg import joint_readings
-
 import numpy as np
-
 import time
-
 from board import SCL, SDA
 import busio
 import adafruit_ads1x15.ads1115 as ADS
 from adafruit_ads1x15.analog_in import AnalogIn
+import argparse
 
+class Pots:
+    def __init__(self, left) -> None:
+        self.left = left
 
+        if self.left:
+            rospy.init_node('left_leg_pots')
+            pub_topic = 'left_joint_readings'
+        else:
+            rospy.init_node('right_leg_pots')
+            pub_topic = 'right_joint_readings'
 
-class Encoders:
-    def __init__(self) -> None:
-        
         i2c = busio.I2C(SCL, SDA)
-        ads = ADS.ADS1115(i2c)
-        self.chan0 = AnalogIn(ads, ADS.P0)
 
-        pub_topic = 'encoder_readings'
+        ads1 = ADS.ADS1115(i2c, address=0x4a)
+        self.Lhip1 = AnalogIn(ads1, ADS.P0)
+        self.Lhip2 = AnalogIn(ads1, ADS.P1)
+        self.Lthigh = AnalogIn(ads1, ADS.P2)
+        self.Lforeleg = AnalogIn(ads1, ADS.P3)
+
+        ads2 = ADS.ADS1115(i2c, address=0x4b)
+        self.Rhip1 = AnalogIn(ads2, ADS.P0)
+        self.Rhip2 = AnalogIn(ads2, ADS.P1)
+        self.Rthigh = AnalogIn(ads2, ADS.P2)
+        self.Rforeleg = AnalogIn(ads2, ADS.P3)
+
+        ads3 = ADS.ADS1115(i2c, address=0x49)
+        self.Lcalf = AnalogIn(ads3, ADS.P0)
+        self.Rcalf = AnalogIn(ads3, ADS.P1)
+
         self.servo_pub = rospy.Publisher(pub_topic, joint_readings, queue_size=1)
         
         self.servo_msg = joint_readings()
 
-        self.read_joint_angles()
+        rate = rospy.Rate(40)
+
+        while not rospy.is_shutdown():
+            self.read_joint_angles()
+            rate.sleep()
 
     def map_range(self, x: float, in_min: float, in_max: float, out_min: float, out_max: float) -> float:
         """
@@ -58,22 +79,20 @@ class Encoders:
             ema.append(alpha * data[i] + (1 - alpha) * ema[-1])
         return ema
     
-    def ros_publish_readings(self, left_angles, right_angles):
-        self.servo_msg.Left_Joint_Readings = left_angles
-        self.servo_msg.Right_Joint_Readings = right_angles
-
-        self.servo_pub.publish(self.servo_msg)
-        return
-    
     def read_joint_angles(self):
-        return
-        
+        if self.left:
+            L_angles = [self.Lhip1.value, self.Lhip2.value, self.Lthigh.value, self.Lforeleg.value, self.Lcalf.value]
+            self.servo_msg.Joint_Readings = L_angles
+            self.servo_pub.publish(self.servo_msg)
+        else:
+            R_angles = [self.Rhip1.value, self.Rhip2.value, self.Rthigh.value, self.Rforeleg.value, self.Rcalf.value]        
+            self.servo_msg.Joint_Readings = R_angles
+            self.servo_pub.publish(self.servo_msg)
 
 if __name__ == '__main__':
-    rospy.init_node('servo_encoders')
-    
-    encoders = Encoders()
-    rate = rospy.Rate(1)
+    parser = argparse.ArgumentParser(description='Potentiometers')
+    parser.add_argument('--right', action="store_false", help='enable Right Leg')
+    args, unknown = parser.parse_known_args()
 
-    while not rospy.is_shutdown():
-        rate.sleep()
+    Left_leg = args.right
+    encoders = Pots(Left_leg)
